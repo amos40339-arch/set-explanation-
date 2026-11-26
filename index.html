@@ -47,6 +47,7 @@ button{font:inherit}
 .boardbox svg{display:block;width:100%;height:auto}
 .bt{font-family:var(--f-board);white-space:pre}
 .overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.25);border:0;cursor:pointer;padding:0}
+.overlay[hidden]{display:none}
 .overlay .big{width:76px;height:76px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(29,78,216,.4)}
 .overlay .big svg{width:30px;height:30px;margin-left:5px}
 .overlay span.t{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-weight:600;color:var(--blue-deep);font-size:.95rem}
@@ -65,7 +66,17 @@ button{font:inherit}
 .vrow{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
 .vrow label{font-weight:600;font-size:.9rem}
 .vrow select{height:42px;flex:1 1 200px;min-width:0;max-width:100%;border:1px solid var(--line);border-radius:10px;padding:0 10px;background:#fff;color:var(--ink);font:500 .92rem var(--f-body)}
-.think{position:absolute;top:10px;right:10px;background:var(--red);color:#fff;font-weight:700;font-size:.85rem;padding:5px 12px;border-radius:999px;font-variant-numeric:tabular-nums}
+.fsbtn{position:absolute;top:6px;right:6px;z-index:2;width:44px;height:44px;border:0;border-radius:10px;background:rgba(10,42,138,.7);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.fsbtn svg{width:22px;height:22px}
+.fsbtn:focus-visible,.overlay:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+/* full screen: the player covers the whole screen (real fullscreen where the browser allows it) */
+html.fs-lock,html.fs-lock body{overflow:hidden}
+.player.fs{position:fixed;inset:0;z-index:1000;margin:0;border:0;border-radius:0;box-shadow:none;gap:8px;overflow:auto;justify-content:center;padding:8px max(8px,env(safe-area-inset-right)) 8px max(8px,env(safe-area-inset-left))}
+.player.fs .ph,.player.fs .vrow,.player.fs .vnote{display:none}
+.player.fs .boardbox{width:100%;max-width:calc((100vh - 150px) * 1.6);max-width:calc((100dvh - 150px) * 1.6);min-width:min(100%,280px);align-self:center}
+.player.fs .caption{min-height:0;padding:8px 12px;font-size:.95rem}
+.player.fs .controls{justify-content:center}
+.think{position:absolute;top:10px;right:58px;background:var(--red);color:#fff;font-weight:700;font-size:.85rem;padding:5px 12px;border-radius:999px;font-variant-numeric:tabular-nums}
 
 /* chapter list */
 .chapters{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:18px}
@@ -154,6 +165,7 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:.88rem;text
           <span class="big"><svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M6 4l14 8-14 8z"/></svg></span>
           <span class="t">Tap to watch</span>
         </button>
+        <button class="fsbtn" id="btnFs" type="button" aria-label="Full screen"><svg id="icFs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
       </div>
       <div class="caption" aria-live="polite"><span class="who" aria-hidden="true">T</span><p id="cap"></p></div>
       <div class="controls">
@@ -1025,6 +1037,37 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:.88rem;text
     if (playing) { unlock(); runStep(true); }
   });
   document.addEventListener('visibilitychange', function(){ if (document.hidden && playing) pause(); });
+
+  /* Full screen: real fullscreen where allowed (Android, desktop), otherwise the player just covers the page (iPhone). */
+  var fsOn = false, playerEl = document.querySelector('.player');
+  var FS_ENTER = '<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>', FS_EXIT = '<path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/>';
+  function fsElement(){ return document.fullscreenElement || document.webkitFullscreenElement; }
+  function setFs(on){
+    fsOn = on;
+    playerEl.classList.toggle('fs', on);
+    document.documentElement.classList.toggle('fs-lock', on);
+    $('btnFs').setAttribute('aria-label', on ? 'Exit full screen' : 'Full screen');
+    $('icFs').innerHTML = on ? FS_EXIT : FS_ENTER;
+    if (!on) { try { screen.orientation && screen.orientation.unlock && screen.orientation.unlock(); } catch(e){} }
+  }
+  function lockLandscape(){ try { var p = screen.orientation && screen.orientation.lock && screen.orientation.lock('landscape'); if (p && p.catch) p.catch(function(){}); } catch(e){} }
+  $('btnFs').addEventListener('click', function(e){
+    e.stopPropagation();
+    if (!fsOn) {
+      setFs(true);
+      var req = playerEl.requestFullscreen || playerEl.webkitRequestFullscreen;
+      if (req) { try { var p = req.call(playerEl); if (p && p.then) p.then(lockLandscape).catch(function(){}); else lockLandscape(); } catch(err){} }
+    } else {
+      var ex = document.exitFullscreen || document.webkitExitFullscreen;
+      if (fsElement() && ex) { try { var q = ex.call(document); if (q && q.catch) q.catch(function(){}); } catch(err){} }
+      setFs(false);
+    }
+  });
+  function onFsChange(){ if (!fsElement() && fsOn) setFs(false); }
+  document.addEventListener('fullscreenchange', onFsChange);
+  document.addEventListener('webkitfullscreenchange', onFsChange);
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && fsOn && !fsElement()) setFs(false); });
+
   runStep(false); renderChapters();
 
 
