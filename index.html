@@ -1,0 +1,1093 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sets Made Simple</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600&family=Kalam:wght@400;700&display=swap">
+<style>
+/* Layout: deep-blue graph-paper header, then a whiteboard lesson player as the centrepiece; Try it / Practice / Notes sit in tabs under it. Single light theme on purpose: white and blue. */
+:root{
+  --bg:#ffffff; --soft:#f3f6fd; --line:#dfe6f3; --ink:#0b1b3a; --muted:#55627a;
+  --blue:#1d4ed8; --blue-deep:#0a2a8a; --blue-soft:#e8efff; --red:#e0453a; --green:#0f9d6b; --yellow:#ffd84d;
+  --f-display:"Plus Jakarta Sans",ui-sans-serif,system-ui,sans-serif;
+  --f-body:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-board:"Kalam","Segoe Print","Comic Sans MS",cursive;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+.in{max-width:900px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0}
+p{margin:0}
+button{font:inherit}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+
+/* header band */
+.band{background-color:var(--blue-deep);
+  background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);
+  background-size:24px 24px;color:#fff;
+  margin-top:calc(-1 * env(safe-area-inset-top,0px));padding-top:calc(env(safe-area-inset-top,0px) + 32px);padding-bottom:88px}
+.band .in{display:flex;flex-direction:column;gap:12px}
+.pill{align-self:flex-start;font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);padding:5px 12px;border-radius:999px}
+.band h1{font-size:clamp(2.1rem,7vw,3.3rem);font-weight:800;letter-spacing:-.02em}
+.band h1 span{color:var(--yellow)}
+.band p.sub{color:#cfdbff;max-width:52ch;font-size:1.05rem}
+
+/* player */
+.player-wrap{margin-top:-64px}
+.player{background:var(--bg);border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 50px rgba(10,42,138,.16);padding:14px;display:flex;flex-direction:column;gap:12px}
+.ph{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ph .chn{font-size:.75rem;font-weight:700;color:var(--blue);background:var(--blue-soft);padding:4px 10px;border-radius:999px;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+.ph h2{font-size:1.1rem;font-weight:700;min-width:0}
+.boardbox{position:relative;border-radius:12px;background:#fff;border:8px solid #d9e0ec;box-shadow:inset 0 0 0 1px #c7d0df;overflow:hidden}
+.boardbox svg{display:block;width:100%;height:auto}
+.bt{font-family:var(--f-board);white-space:pre}
+.overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.25);border:0;cursor:pointer;padding:0}
+.overlay .big{width:76px;height:76px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(29,78,216,.4)}
+.overlay .big svg{width:30px;height:30px;margin-left:5px}
+.overlay span.t{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-weight:600;color:var(--blue-deep);font-size:.95rem}
+.caption{background:var(--soft);border-radius:10px;padding:12px 14px;min-height:4.6em;font-size:1.02rem;display:flex;gap:10px;align-items:flex-start}
+.caption .who{flex:none;width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;font-weight:700;font-size:.8rem;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cbtn{height:44px;min-width:44px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 12px;font-weight:600;font-size:.92rem}
+.cbtn svg{width:18px;height:18px}
+.cbtn.primary{background:var(--blue);border-color:var(--blue);color:#fff;min-width:110px}
+.cbtn[aria-pressed="false"]{color:var(--muted)}
+.prog{flex:1 1 140px;display:flex;gap:4px;min-width:120px}
+.prog i{flex:1;height:6px;border-radius:3px;background:var(--line);transition:background .3s}
+.prog i.on{background:var(--blue)}
+.stepl{font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.vnote{font-size:.8rem;color:var(--muted)}
+.vrow{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.vrow label{font-weight:600;font-size:.9rem}
+.vrow select{height:42px;flex:1 1 200px;min-width:0;max-width:100%;border:1px solid var(--line);border-radius:10px;padding:0 10px;background:#fff;color:var(--ink);font:500 .92rem var(--f-body)}
+.think{position:absolute;top:10px;right:10px;background:var(--red);color:#fff;font-weight:700;font-size:.85rem;padding:5px 12px;border-radius:999px;font-variant-numeric:tabular-nums}
+
+/* chapter list */
+.chapters{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:18px}
+.chap{display:flex;gap:12px;align-items:center;text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;cursor:pointer;color:var(--ink);min-width:0}
+.chap .n{flex:none;width:34px;height:34px;border-radius:9px;background:var(--blue-soft);color:var(--blue);font-weight:800;font-family:var(--f-display);display:flex;align-items:center;justify-content:center}
+.chap .tx{display:flex;flex-direction:column;min-width:0}
+.chap .tx b{font-weight:600;font-size:.95rem}
+.chap .tx small{color:var(--muted);font-size:.8rem}
+.chap.cur{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)}
+.chap.done .n{background:var(--green);color:#fff}
+
+/* tabs */
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line);margin-top:36px}
+.tabs .in{display:flex;gap:4px;overflow-x:auto}
+.tab{border:0;background:none;padding:14px 14px 12px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--blue);border-bottom-color:var(--blue)}
+.panel{padding-block:28px 72px}
+.panel .in{display:flex;flex-direction:column;gap:20px}
+.panel h2{font-size:clamp(1.4rem,4.4vw,1.8rem);font-weight:800}
+.panel h3{font-size:1.1rem;font-weight:700;margin-top:8px}
+.lead{color:var(--muted);max-width:62ch}
+
+/* venn explorer */
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:14px}
+.card svg{width:100%;height:auto;display:block}
+.vt{fill:var(--ink);font-family:var(--f-body);font-size:13px;font-weight:500}
+.vl{font-family:var(--f-board);font-size:19px;font-weight:700}
+.region{fill:var(--yellow);opacity:0;transition:opacity .35s ease}
+.region.on{opacity:.6}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:600;padding:9px 14px;border-radius:9px;border:1px solid var(--line);background:var(--soft);color:var(--ink);cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+.res{display:flex;flex-direction:column;gap:4px;min-height:7em}
+.res .rs{font-family:ui-monospace,Menlo,Consolas,monospace}
+.res .rs b{color:var(--blue)}
+.res .rp{color:var(--muted)}
+.res .rm{font-family:var(--f-board);font-size:1.35rem;color:var(--green);line-height:1.25}
+
+/* quiz */
+.quiz{display:flex;flex-direction:column;gap:14px}
+.q{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.qh{display:flex;gap:10px}
+.qh .qn{flex:none;width:28px;height:28px;border-radius:8px;background:var(--blue-soft);color:var(--blue);font-weight:800;font-size:.85rem;display:flex;align-items:center;justify-content:center}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.opts button{text-align:left;padding:11px 12px;border-radius:9px;border:1px solid var(--line);background:var(--soft);color:var(--ink);cursor:pointer;font-weight:500;min-width:0}
+.opts button.right{background:var(--green);border-color:var(--green);color:#fff}
+.opts button.wrong{border-color:var(--red);color:var(--red);background:#fff;text-decoration:line-through}
+.opts button:disabled{cursor:default}
+.explain{color:var(--muted);font-size:.95rem}
+.explain b{color:var(--ink)}
+.score{position:sticky;bottom:calc(14px + env(safe-area-inset-bottom,0px));align-self:center;background:var(--blue-deep);color:#fff;padding:9px 18px;border-radius:999px;font-weight:600;font-size:.9rem;font-variant-numeric:tabular-nums;box-shadow:0 8px 24px rgba(10,42,138,.3)}
+
+/* notes */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:.95rem}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--soft);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+td.s{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.2rem;color:var(--blue);font-weight:700;white-space:nowrap}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.93em}
+.memo{font-family:var(--f-board);font-size:1.45rem;color:var(--green);line-height:1.25;border-left:4px solid var(--green);padding:2px 0 2px 14px}
+.formula{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--soft);border-radius:10px;padding:12px 14px;overflow-x:auto;white-space:nowrap}
+footer{border-top:1px solid var(--line);color:var(--muted);font-size:.88rem;text-align:center;padding-block:22px}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}.region,.prog i{transition:none}}
+</style>
+
+<header class="band">
+  <div class="in">
+    <span class="pill">MTH 101 · Module 1</span>
+    <h1>Set Theory, <span>made simple</span></h1>
+    <p class="sub">Watch it explained on the whiteboard, step by step. Then try it yourself and test yourself before the exam.</p>
+  </div>
+</header>
+
+<main>
+  <section class="in player-wrap" aria-label="Whiteboard lessons">
+    <div class="player">
+      <div class="ph">
+        <span class="chn" id="chNum">Lesson 1 of 7</span>
+        <h2 id="chTitle">What is a set?</h2>
+      </div>
+      <div class="boardbox">
+        <svg id="board" viewBox="0 0 640 400" role="img" aria-label="Whiteboard"></svg>
+        <span class="think" id="think" hidden></span>
+        <button class="overlay" id="overlay" type="button" aria-label="Play lesson">
+          <span class="big"><svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M6 4l14 8-14 8z"/></svg></span>
+          <span class="t">Tap to watch</span>
+        </button>
+      </div>
+      <div class="caption" aria-live="polite"><span class="who" aria-hidden="true">T</span><p id="cap"></p></div>
+      <div class="controls">
+        <button class="cbtn" id="btnPrev" type="button" aria-label="Previous step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <button class="cbtn primary" id="btnPlay" type="button"><svg id="icPlay" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4l13 8-13 8z"/></svg><span id="playTx">Play</span></button>
+        <button class="cbtn" id="btnNext" type="button" aria-label="Next step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+        <div class="prog" id="prog" aria-hidden="true"></div>
+        <span class="stepl" id="stepl"></span>
+        <button class="cbtn" id="btnVoice" type="button" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4z"/><path id="wave" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg><span id="voiceTx">Voice on</span></button>
+      </div>
+      <div class="vrow"><label for="voiceSel">Voice</label><select id="voiceSel" aria-label="Choose a voice"></select></div>
+      <p class="vnote">No sound? Turn off silent mode, or open the link in Chrome or Safari. Captions always show.</p>
+    </div>
+    <div class="chapters" id="chapters"></div>
+  </section>
+
+  <nav class="tabs" aria-label="More">
+    <div class="in" role="tablist">
+      <button class="tab" role="tab" id="tab-try" aria-controls="p-try" aria-selected="true" type="button">Try it</button>
+      <button class="tab" role="tab" id="tab-quiz" aria-controls="p-quiz" aria-selected="false" type="button">Practice (10 Qs)</button>
+      <button class="tab" role="tab" id="tab-notes" aria-controls="p-notes" aria-selected="false" type="button">Quick notes</button>
+    </div>
+  </nav>
+
+  <section class="panel" id="p-try" role="tabpanel" aria-labelledby="tab-try">
+    <div class="in">
+      <h2>Tap and see it shade</h2>
+      <p class="lead">A = students who eat <b style="color:var(--blue)">amala</b>. B = students who eat <b style="color:var(--red)">jollof</b>. Ngozi eats neither. Tap an operation.</p>
+      <div class="card" id="explorer">
+        <svg viewBox="0 0 360 240" role="img" aria-label="Venn diagram of amala eaters and jollof eaters">
+          <defs>
+            <clipPath id="xclipB"><circle cx="220" cy="125" r="80"/></clipPath>
+            <mask id="xnotB"><rect width="360" height="240" fill="#fff"/><circle cx="220" cy="125" r="80" fill="#000"/></mask>
+            <mask id="xnotA"><rect width="360" height="240" fill="#fff"/><circle cx="140" cy="125" r="80" fill="#000"/></mask>
+            <mask id="xnotAB"><rect width="360" height="240" fill="#fff"/><circle cx="140" cy="125" r="80" fill="#000"/><circle cx="220" cy="125" r="80" fill="#000"/></mask>
+          </defs>
+          <rect class="region" data-r="out" x="10" y="10" width="340" height="220" mask="url(#xnotAB)"/>
+          <circle cx="140" cy="125" r="80" fill="#1d4ed8" fill-opacity=".06"/>
+          <circle cx="220" cy="125" r="80" fill="#e0453a" fill-opacity=".06"/>
+          <circle class="region" data-r="a" cx="140" cy="125" r="80" mask="url(#xnotB)"/>
+          <circle class="region" data-r="b" cx="220" cy="125" r="80" mask="url(#xnotA)"/>
+          <circle class="region" data-r="ab" cx="140" cy="125" r="80" clip-path="url(#xclipB)"/>
+          <circle cx="140" cy="125" r="80" fill="none" stroke="#1d4ed8" stroke-width="2.5"/>
+          <circle cx="220" cy="125" r="80" fill="none" stroke="#e0453a" stroke-width="2.5"/>
+          <rect x="10" y="10" width="340" height="220" rx="6" fill="none" stroke="#8a94a6" stroke-width="1.5"/>
+          <text class="vl" x="20" y="222" fill="#8a94a6">U</text>
+          <text class="vl" x="56" y="36" fill="#1d4ed8">A · amala</text>
+          <text class="vl" x="236" y="36" fill="#e0453a">B · jollof</text>
+          <text class="vt" x="95" y="115" text-anchor="middle">Tobi</text>
+          <text class="vt" x="95" y="145" text-anchor="middle">Femi</text>
+          <text class="vt" x="180" y="115" text-anchor="middle">Kemi</text>
+          <text class="vt" x="180" y="145" text-anchor="middle">Musa</text>
+          <text class="vt" x="265" y="115" text-anchor="middle">Dayo</text>
+          <text class="vt" x="265" y="145" text-anchor="middle">Ada</text>
+          <text class="vt" x="318" y="218" text-anchor="middle">Ngozi</text>
+        </svg>
+        <div class="chips" role="group" aria-label="Operations">
+          <button type="button" id="x-union" data-op="union" aria-pressed="true">A ∪ B</button>
+          <button type="button" id="x-inter" data-op="inter" aria-pressed="false">A ∩ B</button>
+          <button type="button" id="x-amb" data-op="amb" aria-pressed="false">A − B</button>
+          <button type="button" id="x-bma" data-op="bma" aria-pressed="false">B − A</button>
+          <button type="button" id="x-ac" data-op="ac" aria-pressed="false">A′</button>
+          <button type="button" id="x-sym" data-op="sym" aria-pressed="false">A Δ B</button>
+          <button type="button" id="x-uc" data-op="uc" aria-pressed="false">(A ∪ B)′</button>
+          <button type="button" id="x-dm" data-op="dm" aria-pressed="false">A′ ∩ B′</button>
+        </div>
+        <div class="res" aria-live="polite"><p class="rs" id="rs"></p><p class="rp" id="rp"></p><p class="rm" id="rm"></p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-quiz" role="tabpanel" aria-labelledby="tab-quiz" hidden>
+    <div class="in">
+      <h2>Practice questions</h2>
+      <p class="lead">Exam style. Tap an answer and the working shows straight away.</p>
+      <div class="quiz" id="quiz"></div>
+      <div class="score" id="score"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-notes" role="tabpanel" aria-labelledby="tab-notes" hidden>
+    <div class="in">
+      <h2>Quick notes for revision</h2>
+      <p class="lead">Everything from the lessons on one screen. Read this the night before.</p>
+
+      <h3>Two rules of every set</h3>
+      <div class="memo">No repeats. No order. {1, 1, 2} = {2, 1}</div>
+
+      <h3>Symbols, and how to read them</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Symbol</th><th>Say it as</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td class="s">∈ / ∉</td><td>is in / is not in</td><td><code>2 ∈ {1,2,3}</code>, <code>5 ∉ {1,2,3}</code></td></tr>
+          <tr><td class="s">⊆ / ⊂</td><td>subset / proper subset (smaller)</td><td><code>{1,2} ⊂ {1,2,3}</code></td></tr>
+          <tr><td class="s">∪</td><td>union: in A or B</td><td><code>{1,2} ∪ {2,5} = {1,2,5}</code></td></tr>
+          <tr><td class="s">∩</td><td>intersection: in A and B</td><td><code>{1,2} ∩ {2,5} = {2}</code></td></tr>
+          <tr><td class="s">A′</td><td>complement (also Aᶜ or Ā): not in A</td><td>U = {1,…,5}, A = {1,2} → A′ = {3,4,5}</td></tr>
+          <tr><td class="s">A − B</td><td>in A but not in B</td><td><code>{1,2,3} − {2} = {1,3}</code></td></tr>
+          <tr><td class="s">A Δ B</td><td>in exactly one of them</td><td><code>{1,2} Δ {2,5} = {1,5}</code></td></tr>
+          <tr><td class="s">|A|</td><td>how many different elements</td><td><code>|{a,b,b}| = 2</code></td></tr>
+          <tr><td class="s">P(A)</td><td>power set: all subsets (slides: 2ᴬ)</td><td>|P(A)| = 2ⁿ</td></tr>
+          <tr><td class="s">A × B</td><td>all ordered pairs (a, b)</td><td>|A × B| = |A| × |B|</td></tr>
+          <tr><td class="s">∀ → ∧ ∨</td><td>for all · if…then · and · or</td><td>∧ looks like ∩, ∨ looks like ∪</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>The tricky ones (think "bag")</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Question</th><th>Answer</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td><code>∅ ⊆ {1,2,3}</code></td><td><b>Yes</b></td><td>∅ is a subset of every set</td></tr>
+          <tr><td><code>∅ ∈ {1,2,3}</code></td><td><b>No</b></td><td>The items are only 1, 2, 3</td></tr>
+          <tr><td><code>∅ ∈ {∅,1,2,3}</code></td><td><b>Yes</b></td><td>∅ is listed as an item</td></tr>
+          <tr><td><code>{x} ∈ {x,{x}}</code></td><td><b>Yes</b></td><td>{x} is the second item</td></tr>
+          <tr><td><code>{x} ⊆ {x,{x}}</code></td><td><b>Yes</b></td><td>x is in the big set</td></tr>
+          <tr><td><code>{x} ∈ {x}</code></td><td><b>No</b></td><td>The only item is x, not {x}</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>The laws</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Law</th><th>Symbols</th><th>Plain meaning</th></tr></thead>
+        <tbody>
+          <tr><td>Identity</td><td><code>A ∪ ∅ = A</code>, <code>A ∩ U = A</code></td><td>Adding nobody changes nothing</td></tr>
+          <tr><td>Domination</td><td><code>A ∪ U = U</code>, <code>A ∩ ∅ = ∅</code></td><td>Join everybody, get everybody</td></tr>
+          <tr><td>Idempotent</td><td><code>A ∪ A = A</code>, <code>A ∩ A = A</code></td><td>A with itself is itself</td></tr>
+          <tr><td>Complement</td><td><code>A ∪ A′ = U</code>, <code>A ∩ A′ = ∅</code></td><td>In A or not covers all; nobody is both</td></tr>
+          <tr><td>Double complement</td><td><code>(A′)′ = A</code></td><td>Not-not in A = in A</td></tr>
+          <tr><td>Commutative</td><td><code>A ∪ B = B ∪ A</code></td><td>Order doesn't matter</td></tr>
+          <tr><td>Associative</td><td><code>(A ∪ B) ∪ C = A ∪ (B ∪ C)</code></td><td>Brackets don't matter (same sign)</td></tr>
+          <tr><td>Distributive</td><td><code>A ∩ (B ∪ C) = (A ∩ B) ∪ (A ∩ C)</code></td><td>Like a(b + c) = ab + ac</td></tr>
+          <tr><td>De Morgan</td><td><code>(A ∪ B)′ = A′ ∩ B′</code>, <code>(A ∩ B)′ = A′ ∪ B′</code></td><td>Break the bar, flip the sign</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Formulas for word problems</h3>
+      <div class="formula">n(A ∪ B) = n(A) + n(B) − n(A ∩ B)</div>
+      <div class="formula">n(A ∪ B ∪ C) = n(A) + n(B) + n(C) − n(A∩B) − n(A∩C) − n(B∩C) + n(A∩B∩C)</div>
+      <div class="memo">3 circles: start from the middle, subtract your way out.</div>
+
+      <h3>The two exercises from the slides</h3>
+      <p><b>Exercise 1.</b> U = {1,…,10}, P = {2,3,5,7}, E = {2,4,6,8,10}. P ∪ E = <b>{2,3,4,5,6,7,8,10}</b>, P ∩ E = <b>{2}</b>. 1 and 9 sit outside both circles.</p>
+      <p><b>Exercise 2.</b> Maths only 24, Chemistry only 60, Physics only 22. One course only = <b>106</b>. (Watch lesson 7 for every step.)</p>
+      <p style="color:var(--muted)">Russell's paradox (the barber story) shows you can't make a set from just any rule. Read it once. It's unlikely to come out as a calculation.</p>
+    </div>
+  </section>
+</main>
+
+<footer><div class="in">Made by students, for students. Share it with your coursemates before the test.</div></footer>
+
+<script>
+(function(){
+  var NS = 'http://www.w3.org/2000/svg';
+  var COL = {ink:'#1b2433', blue:'#1d4ed8', red:'#e0453a', green:'#0f9d6b', muted:'#8a94a6', yellow:'#ffd84d'};
+  var board = document.getElementById('board');
+  var $ = function(id){ return document.getElementById(id); };
+  var timers = [];
+  function later(fn, ms){ timers.push(setTimeout(fn, Math.max(0, ms))); }
+  function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
+  var layers = {};
+  function el(tag, attrs, parent){
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    (parent || layers.ink).appendChild(e); return e;
+  }
+  var DEFS = '<defs>' +
+    '<clipPath id="bclipB"><circle cx="380" cy="185" r="105"/></clipPath>' +
+    '<mask id="bnotB"><rect width="640" height="400" fill="#fff"/><circle cx="380" cy="185" r="105" fill="#000"/></mask>' +
+    '<mask id="bnotA"><rect width="640" height="400" fill="#fff"/><circle cx="260" cy="185" r="105" fill="#000"/></mask>' +
+    '<mask id="bnotAB"><rect width="640" height="400" fill="#fff"/><circle cx="260" cy="185" r="105" fill="#000"/><circle cx="380" cy="185" r="105" fill="#000"/></mask>' +
+    '</defs>';
+  function rr(x,y,w,h,r){ return 'M'+(x+r)+' '+y+' H'+(x+w-r)+' Q'+(x+w)+' '+y+' '+(x+w)+' '+(y+r)+' V'+(y+h-r)+' Q'+(x+w)+' '+(y+h)+' '+(x+w-r)+' '+(y+h)+' H'+(x+r)+' Q'+x+' '+(y+h)+' '+x+' '+(y+h-r)+' V'+(y+r)+' Q'+x+' '+y+' '+(x+r)+' '+y+' Z'; }
+
+  /* Board: every drawing call either animates (while a beat plays) or appears at once (paused / skipped). */
+  var B = {
+    t:0, end:0, instant:false,
+    reset:function(inst){
+      this.t = 0; this.end = 0; this.instant = inst;
+      board.innerHTML = DEFS;
+      layers.shade = el('g', {}, board); layers.ink = el('g', {}, board);
+    },
+    beat:function(){ this.t = 0; this.end = 0; },
+    span:function(o, dur){
+      if (this.instant || o.now) return [0, 0];
+      var s = o.at != null ? o.at : this.t, e = s + dur;
+      if (!o.keep) this.t = e + (o.gap != null ? o.gap : 220);
+      this.end = Math.max(this.end, e); return [s, dur];
+    },
+    wait:function(ms){ if (!this.instant) this.t += ms; },
+    text:function(x, y, str, o){
+      o = o || {};
+      var t = el('text', {x:x, y:y, 'font-size':o.size || 30, 'text-anchor':o.anchor || 'start', fill:COL[o.color || 'ink'], 'class':'bt'});
+      if (o.weight) t.setAttribute('font-weight', o.weight);
+      try { t.setAttributeNS('http://www.w3.org/XML/1998/namespace', 'xml:space', 'preserve'); } catch(e){}
+      var chars = Array.from(str), per = o.speed || 40, sd = this.span(o, chars.length * per), s = sd[0];
+      if (sd[1] === 0) { t.textContent = str; }
+      else { t.textContent = ''; chars.forEach(function(c, i){ later(function(){ t.textContent += c; }, s + i * per); }); }
+      return t;
+    },
+    title:function(str){ return this.text(36, 58, str, {size:34, color:'blue', weight:700, speed:28}); },
+    stroke:function(p, o, dur){
+      var sd = this.span(o, dur), s = sd[0], d = sd[1];
+      if (d === 0) return p;
+      var len = 1000; try { len = p.getTotalLength() || 1000; } catch(e){}
+      p.style.strokeDasharray = len; p.style.strokeDashoffset = len;
+      later(function(){ p.style.transition = 'stroke-dashoffset ' + d + 'ms ease-in-out'; p.style.strokeDashoffset = 0; }, s + 20);
+      later(function(){ p.style.strokeDasharray = 'none'; }, s + d + 80);
+      return p;
+    },
+    path:function(d, o){ o = o || {}; var p = el('path', {d:d, fill:'none', stroke:COL[o.color || 'ink'], 'stroke-width':o.w || 4, 'stroke-linecap':'round', 'stroke-linejoin':'round'}); return this.stroke(p, o, o.dur || 800); },
+    circle:function(cx, cy, r, o){ o = o || {}; return this.path('M'+cx+' '+(cy-r)+' a'+r+' '+r+' 0 1 1 0 '+(2*r)+' a'+r+' '+r+' 0 1 1 0 '+(-2*r), {color:o.color || 'blue', w:o.w || 4, dur:o.dur || 900, now:o.now, at:o.at, keep:o.keep, gap:o.gap}); },
+    line:function(x1, y1, x2, y2, o){ o = o || {}; o.dur = o.dur || 420; return this.path('M'+x1+' '+y1+' L'+x2+' '+y2, o); },
+    arrow:function(x1, y1, x2, y2, o){
+      o = o || {}; var a = Math.atan2(y2-y1, x2-x1), h = 14;
+      var hx1 = x2 - h*Math.cos(a-0.5), hy1 = y2 - h*Math.sin(a-0.5), hx2 = x2 - h*Math.cos(a+0.5), hy2 = y2 - h*Math.sin(a+0.5);
+      o.dur = o.dur || 500;
+      return this.path('M'+x1+' '+y1+' L'+x2+' '+y2+' M'+hx1.toFixed(1)+' '+hy1.toFixed(1)+' L'+x2+' '+y2+' L'+hx2.toFixed(1)+' '+hy2.toFixed(1), o);
+    },
+    rrect:function(x, y, w, h, r, o){ o = o || {}; o.dur = o.dur || 900; return this.path(rr(x,y,w,h,r), o); },
+    shade:function(region, o){
+      o = o || {};
+      var R = {
+        a:['circle', {cx:260, cy:185, r:105, mask:'url(#bnotB)'}],
+        b:['circle', {cx:380, cy:185, r:105, mask:'url(#bnotA)'}],
+        ab:['circle', {cx:260, cy:185, r:105, 'clip-path':'url(#bclipB)'}],
+        out:['rect', {x:90, y:45, width:460, height:280, mask:'url(#bnotAB)'}]
+      }[region];
+      var attrs = R[1]; attrs.fill = COL[o.color || 'yellow'];
+      var e = el(R[0], attrs, layers.shade), op = o.op || 0.6;
+      var sd = this.span(o, 500);
+      if (sd[1] === 0) { e.setAttribute('opacity', op); return e; }
+      e.setAttribute('opacity', 0); e.style.transition = 'opacity 500ms ease';
+      later(function(){ e.setAttribute('opacity', op); }, sd[0] + 20);
+      return e;
+    },
+    fade:function(els, o){
+      o = o || {}; var sd = this.span(o, 500);
+      els.forEach(function(e){
+        if (!e) return;
+        if (sd[1] === 0) { e.setAttribute('opacity', 0); return; }
+        later(function(){ e.style.transition = 'opacity 500ms ease'; e.setAttribute('opacity', 0); }, sd[0] + 20);
+      });
+    }
+  };
+
+  /* Reusable diagrams */
+  function venn(o){
+    o = o || {};
+    var part = o.part || 'all', now = !o.animate;
+    if (part === 'all' || part === 'u') {
+      B.rrect(90, 45, 460, 280, 8, {color:'muted', w:2.5, now:now, dur:700});
+      B.text(104, 314, 'U', {size:26, color:'muted', now:now});
+    }
+    if (part === 'all' || part === 'a') {
+      B.circle(260, 185, 105, {color:'blue', now:now});
+      B.text(150, 74, o.la || 'A · amala', {size:26, color:'blue', weight:700, now:now});
+    }
+    if (part === 'all' || part === 'b') {
+      B.circle(380, 185, 105, {color:'red', now:now});
+      B.text(388, 74, o.lb || 'B · jollof', {size:26, color:'red', weight:700, now:now});
+    }
+  }
+  var PEOPLE = {Tobi:[210,180], Femi:[210,220], Kemi:[320,180], Musa:[320,220], Dayo:[430,180], Ada:[430,220], Ngozi:[502,308]};
+  function names(list, animate){
+    (list || Object.keys(PEOPLE)).forEach(function(n){ B.text(PEOPLE[n][0], PEOPLE[n][1], n, {size:26, anchor:'middle', now:!animate, gap:120}); });
+  }
+  function room(){ venn(); names(); }
+  function result(str, color){ return B.text(320, 372, str, {size:str.length > 34 ? 25 : 30, anchor:'middle', color:color || 'blue'}); }
+
+  var NUMS = [
+    {x:320,y:201,v:'14',step:1},{x:320,y:136,v:'12',step:2},{x:265,y:246,v:'14',step:3},{x:375,y:246,v:'8',step:4},
+    {x:215,y:156,v:'24',step:5},{x:425,y:156,v:'60',step:6},{x:320,y:318,v:'22',step:7}
+  ];
+  function three(upto, animate){
+    var now = !animate;
+    B.circle(270, 165, 95, {color:'blue', now:now});
+    B.circle(370, 165, 95, {color:'red', now:now});
+    B.circle(320, 245, 95, {color:'green', now:now});
+    B.text(36, 62, 'Maths 64', {size:28, color:'blue', weight:700, now:now});
+    B.text(470, 62, 'Chem 94', {size:28, color:'red', weight:700, now:now});
+    B.text(450, 385, 'Physics 58', {size:28, color:'green', weight:700, now:now});
+    NUMS.forEach(function(n){ if (n.step <= upto) B.text(n.x, n.y, n.v, {size:30, anchor:'middle', weight:700, now:true}); });
+  }
+  function writeNum(step){ NUMS.forEach(function(n){ if (n.step === step) B.text(n.x, n.y, n.v, {size:34, anchor:'middle', weight:700, color:'red', speed:140}); }); }
+  function calc(i, str, color){ return B.text(22, 338 + i * 36, str, {size:25, color:color || 'blue'}); }
+
+  /* Lessons: each step is a list of beats. A beat = what the teacher says + what goes on the board while saying it. */
+  var CH = [
+    {title:'What is a set?', steps:[
+      [
+        {say:"Good evening class. Today we're learning sets and I promise you it's easier than it looks.", draw:function(){ B.title('What is a set?'); }},
+        {say:"A set is simply a collection of things that belong together. That's all it is.", draw:function(){ B.text(320, 140, 'SET = a collection of things', {size:34, anchor:'middle'}); }},
+        {say:"We write the members inside curly brackets, like this.", draw:function(){ B.text(320, 230, '{ Tobi, Kemi, Femi }', {size:50, anchor:'middle', color:'blue', speed:55}); }},
+        {say:"Each person inside is called an element. Tobi is an element, Kemi is an element, and Femi is an element.", draw:function(){ B.arrow(300, 330, 290, 262, {color:'red'}); B.text(320, 372, 'each one is an ELEMENT', {size:28, color:'red', anchor:'middle'}); }}
+      ],
+      [
+        {say:"Let me give you an example you know very well. Your class WhatsApp group.", draw:function(){ B.rrect(80, 80, 230, 280, 20, {color:'ink'}); B.text(195, 125, 'MTH 101 Gang', {size:27, anchor:'middle', color:'green', weight:700}); B.line(100, 142, 290, 142, {color:'muted', w:2, dur:300}); }},
+        {say:"The group itself is the set. And the members, Tobi, Kemi, Femi, Dayo and Ada, are the elements.", draw:function(){
+          ['Tobi','Kemi','Femi','Dayo','Ada'].forEach(function(n, i){ B.text(112, 182 + i*38, '•  ' + n, {size:26, gap:120}); });
+          B.arrow(335, 220, 410, 220, {color:'red'});
+          B.text(425, 205, 'the group', {size:30, color:'red'}); B.text(425, 242, '= a SET', {size:30, color:'red', weight:700});
+          B.text(425, 300, 'members', {size:28}); B.text(425, 334, '= ELEMENTS', {size:28, weight:700});
+        }},
+        {say:"So any time you hear the word set, just ask yourself two things. Which group are we talking about? And who is inside it?"}
+      ],
+      [
+        {say:"One important thing. A set must be well defined. That means for anything you pick, you can clearly say yes it is in, or no it is not.", draw:function(){ B.title('A set must be well defined'); }},
+        {say:"The students offering M T H one zero one is a set, because you can check the course list. But the tall students in the class is not a set, because tall depends on who you ask.", draw:function(){ B.text(50, 150, '✓  students offering MTH 101', {size:30, color:'green'}); B.text(50, 215, '✗  tall students in the class', {size:30, color:'red'}); B.text(90, 255, 'tall to who?', {size:26, color:'muted'}); }},
+        {say:"So before you call something a set, ask yourself one question. Can I say clearly who is in and who is out? If yes, then it is a set.", draw:function(){ B.text(320, 345, 'clear yes or no  →  it is a set', {size:30, anchor:'middle', color:'blue', weight:700}); }}
+      ],
+      [
+        {say:"Now every set follows two rules. Rule number one is that repeats don't count.", draw:function(){ B.title('Rule 1: no repeats'); B.text(320, 150, '{ 1, 1, 2, 3, 3 }', {size:48, anchor:'middle', speed:60}); }},
+        {say:"Imagine the admin adds Tobi to the group and then by mistake adds Tobi again. Does the group now have two Tobis? No! It's still just one Tobi.", draw:function(){ B.text(320, 365, 'Tobi added twice = still ONE Tobi', {size:26, anchor:'middle', color:'red'}); }},
+        {say:"So when you see one, one, two, three, three, you clean it up, and it becomes just one, two, three.", draw:function(){ B.text(320, 215, '=', {size:48, anchor:'middle'}); B.text(320, 285, '{ 1, 2, 3 }', {size:48, anchor:'middle', color:'blue', speed:60}); }}
+      ],
+      [
+        {say:"Rule number two is that order doesn't matter.", draw:function(){ B.title("Rule 2: order doesn't matter"); B.text(320, 185, '{ 1, 2, 3 } = { 3, 2, 1 }', {size:46, anchor:'middle', speed:55}); }},
+        {say:"Whether Tobi joined the group first or last, it's still the same group. So the set one, two, three is exactly the same as the set three, two, one.", draw:function(){ B.text(320, 260, '✓ same set', {size:38, anchor:'middle', color:'green', weight:700}); B.text(320, 335, 'same people, different seating', {size:26, anchor:'middle', color:'red'}); }}
+      ],
+      [
+        {say:"Quick question. Pause and think. Is the set with the letters A, B and A, equal to the set with the letters B and A?", draw:function(){ B.title('Quick check'); B.text(320, 190, '{ a, b, a } = { b, a }  ?', {size:48, anchor:'middle', speed:55}); }, hold:4000},
+        {say:"Yes it is! Remove the repeated A and you get A and B. And since order doesn't matter, it's the same set.", draw:function(){ B.text(320, 270, '✓ YES', {size:44, anchor:'middle', color:'green', weight:700}); B.text(320, 340, 'remove the repeat → { a, b }', {size:28, anchor:'middle'}); }}
+      ],
+      [
+        {say:"There are three ways to write a set. The first way is to list everything, like Lagos, Osun and Oyo.", draw:function(){ B.title('Three ways to write a set'); B.text(50, 130, '1.  List it:   { Lagos, Osun, Oyo }', {size:30}); }},
+        {say:"The second way is to show a pattern, like one, two, three, and then three dots. Those dots mean the pattern continues the same way, forever.", draw:function(){ B.text(50, 200, '2.  Pattern:   { 1, 2, 3, … }', {size:30}); }},
+        {say:"The third way is called set-builder form. Instead of listing, you describe the rule. When you see the colon or the straight line, you read it as such that.", draw:function(){ B.text(50, 270, '3.  Set-builder:   { x : x is odd }', {size:30}); B.text(320, 345, ':  or  |   =   "such that"', {size:30, anchor:'middle', color:'red'}); }},
+        {say:"So this one reads as the set of all x such that x is odd. That gives one, three, five, seven, and so on."}
+      ],
+      [
+        {say:"Your turn. Pause and think. How would you list the set of even numbers between one and nine?", draw:function(){ B.title('Your turn'); B.text(320, 170, '{ x : x is even, 1 < x < 9 }', {size:38, anchor:'middle', speed:45}); B.text(320, 230, 'list it = ?', {size:34, anchor:'middle', color:'red'}); }, hold:4000},
+        {say:"The answer is two, four, six and eight. We just wrote down every number that obeys the rule. So the same set can be written by listing, or by giving the rule.", draw:function(){ B.text(320, 310, '= { 2, 4, 6, 8 }', {size:48, anchor:'middle', color:'green', weight:700, speed:60}); }}
+      ],
+      [
+        {say:"Your slide has a scary one. Let D of x and y mean that x is divisible by y. Then the slide writes this long thing.", draw:function(){ B.title('Decoding the slide'); B.text(320, 150, '{ x : ∀y ((y > 1) ∧ (y < x)) → ¬D(x, y) }', {size:27, anchor:'middle', speed:30}); }},
+        {say:"Let's read it slowly. It is the set of all x such that, for every y bigger than one and smaller than x, x is not divisible by y.", draw:function(){ B.text(320, 220, 'no number between 1 and x divides x', {size:28, anchor:'middle', color:'green'}); }},
+        {say:"So no number in between can divide x. What do we call a number like that? A prime number. So this set is simply the prime numbers. And that little hook symbol you see means not.", draw:function(){ B.text(320, 300, '= the PRIME numbers', {size:42, anchor:'middle', color:'blue', weight:700}); B.text(320, 360, '¬  means NOT', {size:26, anchor:'middle', color:'muted'}); }}
+      ],
+      [
+        {say:"Next is cardinality. It's a big word with a simple meaning. It just means how many different elements are in the set.", draw:function(){ B.title('Cardinality = how many?'); }},
+        {say:"Look at the set S, with the letters A, B, B and C. How many different letters do you see? Just A, B and C. So the answer is three.", draw:function(){ B.text(320, 160, 'S = { a, b, b, c }', {size:44, anchor:'middle'}); B.text(320, 250, '|S| = 3', {size:60, anchor:'middle', color:'blue', weight:700, speed:90}); }},
+        {say:"We write cardinality by putting a straight line on each side of S. And remember count the different ones only. Don't count B twice.", draw:function(){ B.text(320, 335, 'count the DIFFERENT ones only', {size:28, anchor:'middle', color:'red'}); }}
+      ],
+      [
+        {say:"Here's a tricky cardinality question. What if the elements are themselves sets? Simple. Each bag inside counts as one item.", draw:function(){ B.title('Tricky cardinality'); B.text(320, 160, 'S = { ∅, {∅}, {∅, {∅}} }', {size:40, anchor:'middle', speed:45}); }},
+        {say:"Here there are three items. First the empty set. Second a bag holding the empty set. Third a bigger bag. So the cardinality is three.", draw:function(){ B.text(320, 250, '|S| = 3', {size:56, anchor:'middle', color:'blue', weight:700, speed:90}); }},
+        {say:"And what about the natural numbers, zero, one, two, and so on forever? That set never ends, so its cardinality is infinite.", draw:function(){ B.text(320, 340, '|{ 0, 1, 2, … }|  is infinite', {size:30, anchor:'middle', color:'red'}); }}
+      ],
+      [
+        {say:"Finally a set with nothing inside. We call it the empty set. We write it as a zero with a slanted line through it, or as curly brackets with nothing inside.", draw:function(){ B.title('The empty set'); B.text(320, 175, '∅  =  { }', {size:62, anchor:'middle', color:'blue', speed:90}); }},
+        {say:"For example, the set of months with thirty-two days. Is there any? None. So that set is empty, and its cardinality is zero.", draw:function(){ B.text(320, 260, 'months with 32 days = ∅', {size:32, anchor:'middle', color:'red'}); B.text(320, 335, '|∅| = 0', {size:44, anchor:'middle'}); }}
+      ],
+      [
+        {say:"Sets also come in types. A finite set has an end, so you can count all its elements. Like the days of the week. Seven days and it stops.", draw:function(){ B.title('Types of sets'); B.text(40, 140, 'Finite:  { Mon, Tue, … Sun }  → 7', {size:28}); }},
+        {say:"An infinite set never ends. Like the natural numbers. No matter how far you count, there is always a next one.", draw:function(){ B.text(40, 200, 'Infinite:  { 1, 2, 3, … }  never ends', {size:28, color:'red'}); }},
+        {say:"A set with exactly one element is called a singleton. For example, the set containing only the number five.", draw:function(){ B.text(40, 260, 'Singleton:  { 5 }  → one element', {size:28, color:'blue'}); }},
+        {say:"And the empty set has no element at all. It is still a finite set, and its cardinality is zero.", draw:function(){ B.text(40, 320, 'Empty:  { }  → 0, still finite', {size:28, color:'green'}); }}
+      ],
+      [
+        {say:"Now two words that students always mix up. Equal sets and equivalent sets.", draw:function(){ B.title('Equal vs equivalent'); }},
+        {say:"Equal sets have exactly the same elements. One, two, three and three, two, one are equal sets.", draw:function(){ B.text(40, 150, 'Equal:  {1, 2, 3} = {3, 2, 1}', {size:30, color:'blue'}); B.text(70, 190, 'same elements', {size:26, color:'muted'}); }},
+        {say:"Equivalent sets only need the same number of elements. One, two, three and Lagos, Osun, Oyo are equivalent, because both have three elements. But they are not equal.", draw:function(){ B.text(40, 260, 'Equivalent:  {1, 2, 3} ~ {Lagos, Osun, Oyo}', {size:24, color:'red'}); B.text(70, 300, 'same count, different elements', {size:26, color:'muted'}); }},
+        {say:"So equal means the same elements, and equivalent means the same number of elements. Equal sets are always equivalent, but equivalent sets are not always equal.", draw:function(){ B.text(320, 365, 'equal = same items  ·  equivalent = same count', {size:24, anchor:'middle', color:'green', weight:700}); }}
+      ],
+      [
+        {say:"One last story from your slides, called Russell's paradox. A town has one barber, and he shaves everyone who does not shave themselves.", draw:function(){ B.title("Bonus: Russell's paradox"); B.text(320, 150, 'The barber shaves everyone who', {size:30, anchor:'middle'}); B.text(320, 190, 'does NOT shave themselves.', {size:30, anchor:'middle'}); }},
+        {say:"So who shaves the barber? If he shaves himself, he breaks the rule. But if he doesn't, then the rule says he must. It goes round and round.", draw:function(){ B.text(320, 265, 'Who shaves the barber?', {size:38, anchor:'middle', color:'red', weight:700}); }},
+        {say:"The lesson is that you cannot make a set from just any rule. It's interesting, but it rarely comes out as a calculation, so don't spend your whole night on it.", draw:function(){ B.text(320, 345, 'not every rule makes a valid set', {size:28, anchor:'middle', color:'green'}); }}
+      ],
+      [
+        {say:"Let's recap lesson one. A set is a collection of things, written inside curly brackets. Repeats don't count, and order doesn't matter.", draw:function(){ B.title('Recap: lesson 1'); B.text(50, 140, '• set = collection inside { }', {size:30}); B.text(50, 190, '• no repeats, order does not matter', {size:30}); }},
+        {say:"You can write a set by listing, by a pattern, or with set-builder form. Cardinality means how many different elements. A set can be finite, infinite, a singleton, or empty. And remember equal sets have the same elements, but equivalent sets only have the same number of elements.", draw:function(){ B.text(50, 240, '• list · pattern · set-builder', {size:30}); B.text(50, 290, '• |S| = how many different', {size:30}); B.text(50, 340, '• |∅| = 0', {size:30}); }}
+      ]
+    ]},
+    {title:'Symbols you must know', steps:[
+      [
+        {say:"Many students fear this topic because of the symbols. But a symbol is just a short way of writing words. Once you can read it out loud, the fear goes.", draw:function(){ B.title('Symbols: say them out loud'); B.text(320, 205, '∈   ∉   ⊆   ∪   ∩   A′', {size:58, anchor:'middle', color:'blue', speed:90}); }},
+        {say:"So let's read them one by one, like learning a new alphabet.", draw:function(){ B.text(320, 310, "Don't fear them. Read them.", {size:30, anchor:'middle', color:'red'}); }}
+      ],
+      [
+        {say:"This first symbol looks like a rounded letter E. It's called the element symbol, and it tells you that something is an element of a set. In simple words, it is in the set.", draw:function(){ B.title('∈  means "is in"'); }},
+        {say:"For example, two is in the set one, two, three. True? Yes. So we write two, then the element symbol, then the set. And we read it as two is an element of the set.", draw:function(){ B.text(320, 190, '2 ∈ { 1, 2, 3 }', {size:54, anchor:'middle', speed:70}); B.text(320, 280, '"2 is in the set"  ✓', {size:30, anchor:'middle', color:'green'}); }}
+      ],
+      [
+        {say:"Now put a slash through it. Any time you see a slash through a symbol in maths, it means not. So this one tells you that something is not an element of the set. In simple words, it is not in.", draw:function(){ B.title('∉  means "is not in"'); }},
+        {say:"For example, five is not in the set one, two, three. Correct.", draw:function(){ B.text(320, 185, '5 ∉ { 1, 2, 3 }', {size:54, anchor:'middle', speed:70}); }},
+        {say:"It's the same idea as the equal sign with a slash through it, which means not equal.", draw:function(){ B.text(320, 285, 'slash = NOT   (like ≠)', {size:32, anchor:'middle', color:'red'}); }}
+      ],
+      [
+        {say:"This one looks like a letter U lying on its side with a line under it. It tells you that one set is a subset of another set.", draw:function(){ B.title('⊆  means "is a subset of"'); }},
+        {say:"The set one, two is a subset of the set one, two, three, because everything on the left can be found on the right.", draw:function(){ B.text(320, 165, '{ 1, 2 } ⊆ { 1, 2, 3 }', {size:48, anchor:'middle', speed:60}); B.text(320, 230, 'everything on the left is on the right', {size:27, anchor:'middle', color:'green'}); }},
+        {say:"Now look at the line under it. Think of the less than or equal to sign. The line means the two sets are allowed to be equal. Without the line the left side must be smaller, and we call it a proper subset.", draw:function(){ B.text(320, 305, '⊆  is like  ≤', {size:34, anchor:'middle'}); B.text(320, 355, '⊂  is like  <   (proper subset)', {size:30, anchor:'middle', color:'red'}); }}
+      ],
+      [
+        {say:"Pause and think. Is the set one, two, three a proper subset of the set one, two, three?", draw:function(){ B.title('Quick check'); B.text(320, 180, '{ 1, 2, 3 } ⊂ { 1, 2, 3 }  ?', {size:44, anchor:'middle', speed:55}); }, hold:4000},
+        {say:"No! It is a subset, because everything on the left is on the right. But it is not a proper subset, because the two sets are equal. A proper subset must be missing at least one element.", draw:function(){ B.text(320, 260, '⊆  ✓    but    ⊂  ✗', {size:44, anchor:'middle', color:'red', weight:700}); B.text(320, 335, 'proper = missing at least one', {size:28, anchor:'middle', color:'green'}); }}
+      ],
+      [
+        {say:"Turn the subset symbol the other way round and it means superset. So the set one, two, three contains the set one, two. It's the same fact, just read from the other side.", draw:function(){ B.title('Superset and equal sets'); B.text(320, 140, '{ 1, 2, 3 } ⊇ { 1, 2 }', {size:44, anchor:'middle'}); B.text(320, 190, '"contains"', {size:28, anchor:'middle', color:'green'}); }},
+        {say:"Now when are two sets equal? When A is a subset of B, and B is also a subset of A. Each one fits inside the other, so they must have exactly the same elements.", draw:function(){ B.text(320, 275, 'A = B   ⟺   A ⊆ B  and  B ⊆ A', {size:34, anchor:'middle', color:'blue', weight:700}); }},
+        {say:"That's how you prove two sets are equal in the exam. You show both directions.", draw:function(){ B.text(320, 345, 'prove BOTH directions', {size:30, anchor:'middle', color:'red'}); }}
+      ],
+      [
+        {say:"These next two are the most important. The first one looks like a cup, and it's called union. It means or. So you take everything from both sets, together.", draw:function(){ B.title('∪ and ∩'); B.text(60, 150, '∪  union  =  OR', {size:40, color:'blue', weight:700}); B.text(60, 200, '{1, 2} ∪ {2, 5} = {1, 2, 5}', {size:30}); }},
+        {say:"The second one is the cup turned upside down, like a bridge, and it's called intersection. It means and. So you take only what both sets share.", draw:function(){ B.text(60, 280, '∩  intersection  =  AND', {size:40, color:'red', weight:700}); B.text(60, 330, '{1, 2} ∩ {2, 5} = {2}', {size:30}); }},
+        {say:"Here's an easy way to remember. The union symbol looks like the letter U. U for union, U for unite. Everybody comes."}
+      ],
+      [
+        {say:"This small mark at the top right of A is read as A prime. It means the complement of A, which is everything that is not in A.", draw:function(){ B.title('A′  means complement'); }},
+        {say:"Let's say the universal set U is one, two, three, four and five. And A is just one and two. What is not in A? Three, four and five. So that's A prime.", draw:function(){ B.text(60, 135, 'U = { 1, 2, 3, 4, 5 }', {size:34}); B.text(60, 190, 'A = { 1, 2 }', {size:34}); B.text(60, 265, 'A′ = { 3, 4, 5 }', {size:48, color:'blue', weight:700, speed:60}); }},
+        {say:"Some books write it as A with a small c on top, or A with a bar over it. It's the same meaning, so don't let it confuse you.", draw:function(){ B.text(60, 340, 'also written  Aᶜ  or  Ā', {size:30, color:'red'}); }}
+      ],
+      [
+        {say:"Your lecturer's slides also use some logic symbols. You don't need to study logic for this. You just need to be able to read them.", draw:function(){ B.title('Logic symbols in your slides'); }},
+        {say:"The upside down A means for all. And the arrow means if the first thing is true then the second thing is true.", draw:function(){ B.text(80, 140, '∀   =  for all', {size:36, gap:300}); B.text(80, 200, '→   =  if … then', {size:36}); }},
+        {say:"The symbol that looks like a pointy hat means and. See, it looks like intersection. The open V shape means or, and it looks like union.", draw:function(){ B.text(80, 260, '∧   =  and   (looks like ∩)', {size:36, gap:300}); B.text(80, 320, '∨   =  or     (looks like ∪)', {size:36}); }},
+        {say:"So when the slide says for all x, if x is in A then x is in B, it simply means everything in A is also in B. And that's just a subset. Simple."}
+      ],
+      [
+        {say:"Let's recap the symbols. The element symbol means is in. With a slash, it means is not in. The subset symbol means everything on the left is also on the right.", draw:function(){ B.title('Recap: read them out loud'); B.text(50, 140, '∈  is in        ∉  is not in', {size:30}); B.text(50, 195, '⊆  subset       ⊂  proper subset', {size:30}); }},
+        {say:"The union cup means or, so you take everything from both sets. The upside down cup is intersection. It means and, so you take only what they share. And A prime means everything not in A.", draw:function(){ B.text(50, 255, '∪  union = or', {size:30, color:'blue'}); B.text(320, 255, '∩  intersection = and', {size:30, color:'red'}); B.text(50, 320, 'A′  everything not in A', {size:30}); }}
+      ]
+    ]},
+    {title:'Subsets and power sets', steps:[
+      [
+        {say:"Here's the trick that will save you in the exam. Picture every set as a bag.", draw:function(){ B.title('Think of a set as a BAG'); B.path('M275 170 Q275 112 320 112 Q365 112 365 170', {color:'ink', dur:500}); B.path('M215 170 L425 170 L448 330 Q448 352 426 352 L214 352 Q192 352 192 330 Z', {color:'ink', dur:1000}); }},
+        {say:"This bag is holding three items. One, two and three.", draw:function(){ B.text(320, 275, '1    2    3', {size:46, anchor:'middle', color:'blue', speed:80}); }}
+      ],
+      [
+        {say:"Now the element symbol asks one question. Is this one single item sitting inside the bag?", draw:function(){ B.title('∈  vs  ⊆'); B.text(50, 160, '∈  asks: is this ONE ITEM in the bag?', {size:32, color:'blue'}); }},
+        {say:"The subset symbol asks a different question. Can I build this smaller bag, using only items from the big bag?", draw:function(){ B.text(50, 240, '⊆  asks: can I build this SMALLER BAG', {size:32, color:'green'}); B.text(98, 280, 'from the big bag?', {size:32, color:'green'}); }},
+        {say:"Item versus bag. Hold that in your head.", draw:function(){ B.text(320, 360, 'item vs bag', {size:36, anchor:'middle', color:'red', weight:700}); }}
+      ],
+      [
+        {say:"This one is an exam favourite. Pause and think. Is the empty set a subset of the set one, two, three?", draw:function(){ B.title('Quick check'); B.text(320, 185, '∅ ⊆ { 1, 2, 3 }  ?', {size:52, anchor:'middle', speed:60}); }, hold:4000},
+        {say:"Yes! Can you build an empty bag from the big bag? Of course. Just take nothing. That's why the empty set is a subset of every set.", draw:function(){ B.text(320, 265, '✓  YES', {size:44, anchor:'middle', color:'green', weight:700}); B.text(320, 340, 'empty bag = take nothing. Always possible.', {size:26, anchor:'middle'}); }}
+      ],
+      [
+        {say:"Now here's a tricky one. Is the empty set an element of the set one, two, three? Think.", draw:function(){ B.title('Tricky one'); B.text(320, 170, '∅ ∈ { 1, 2, 3 }  ?', {size:52, anchor:'middle', speed:60}); }, hold:3500},
+        {say:"No! Open the bag and look inside. The only items are one, two and three. There's no empty bag sitting in there.", draw:function(){ B.text(320, 245, '✗  NO', {size:44, anchor:'middle', color:'red', weight:700}); B.text(320, 300, 'the items are only 1, 2 and 3', {size:26, anchor:'middle'}); }},
+        {say:"But if the set was written as the empty set, one, two, three, then the answer is yes. Because now the empty set is listed as one of the items.", draw:function(){ B.text(320, 365, 'but  ∅ ∈ { ∅, 1, 2, 3 }  ✓', {size:30, anchor:'middle', color:'green'}); }}
+      ],
+      [
+        {say:"Your slides have a quiz with sets inside sets. Use bag thinking. This big bag holds two items. The first is x, and the second is a small bag holding x.", draw:function(){ B.title('The slide quiz'); B.text(320, 140, '{ x, {x} }', {size:48, anchor:'middle', color:'blue'}); B.text(320, 185, 'items:   x    and    {x}', {size:28, anchor:'middle', color:'green'}); }},
+        {say:"Is the small bag an element of the big bag? Yes it's the second item. Is it also a subset? Yes again, because you can build a bag holding just x.", draw:function(){ B.text(70, 250, '{x} ∈ {x, {x}}     ✓', {size:32}); B.text(70, 300, '{x} ⊆ {x, {x}}     ✓', {size:32}); }},
+        {say:"But is the small bag an element of itself? No. The only item inside it is x, not the bag.", draw:function(){ B.text(70, 355, '{x} ∈ {x}     ✗', {size:32, color:'red'}); }}
+      ],
+      [
+        {say:"Next is the power set. It's the set of every possible subset you can make from a set. We write it as P of S.", draw:function(){ B.title('Power set = every subset'); B.text(320, 160, 'P(S) = all the subsets of S', {size:34, anchor:'middle', color:'green'}); }},
+        {say:"Let's go to the buka. You're buying rice, and the extras on offer are chicken and plantain.", draw:function(){ B.text(320, 260, 'S = { chicken, plantain }', {size:42, anchor:'middle', color:'blue', speed:50}); }}
+      ],
+      [
+        {say:"How many ways can you order? Number one is plain rice with no extras. That's the empty set.", draw:function(){ B.title('At the buka...'); B.text(90, 135, '1.   ∅   (plain rice)', {size:32}); }},
+        {say:"Number two is rice and chicken. Number three is rice and plantain.", draw:function(){ B.text(90, 190, '2.   { chicken }', {size:32, gap:500}); B.text(90, 245, '3.   { plantain }', {size:32}); }},
+        {say:"Number four is rice with chicken and plantain. Big man order!", draw:function(){ B.text(90, 300, '4.   { chicken, plantain }', {size:32}); }},
+        {say:"That's four options. So this set has four subsets.", draw:function(){ B.text(320, 370, '= 4 subsets', {size:38, anchor:'middle', color:'red', weight:700}); }}
+      ],
+      [
+        {say:"Why four? Each extra has two choices, in or out. Chicken is in or out. Plantain is in or out. So two times two gives four.", draw:function(){ B.title('The rule'); B.text(320, 140, 'every item: IN or OUT', {size:34, anchor:'middle', color:'red'}); B.text(320, 195, '2 × 2 = 4', {size:36, anchor:'middle'}); }},
+        {say:"Add salad and it becomes two times two times two, which is eight. So the rule is that a set with n items has two to the power n subsets.", draw:function(){ B.text(320, 275, 'n items  →  2ⁿ subsets', {size:48, anchor:'middle', color:'blue', weight:700, speed:50}); }},
+        {say:"And what about proper subsets? Just remove the full set itself. So that's two to the power n, minus one.", draw:function(){ B.text(320, 350, 'proper subsets = 2ⁿ − 1', {size:32, anchor:'middle', color:'green'}); }}
+      ],
+      [
+        {say:"Let's check the rule with salad added. Three extras, so two to the power three, which is eight. First the small ones. Nothing at all, then each extra on its own.", draw:function(){ B.title('3 items → 2³ = 8 subsets'); B.text(40, 140, '∅', {size:30, gap:200}); B.text(40, 190, '{ chicken }', {size:30, gap:200}); B.text(40, 240, '{ plantain }', {size:30, gap:200}); B.text(40, 290, '{ salad }', {size:30}); }},
+        {say:"Then the pairs, and finally all three together. Count them. Eight subsets, just as the rule said. If you ever doubt the rule, list them like this.", draw:function(){ B.text(250, 140, '{ chicken, plantain }', {size:26, gap:200}); B.text(250, 190, '{ chicken, salad }', {size:26, gap:200}); B.text(250, 240, '{ plantain, salad }', {size:26, gap:200}); B.text(250, 290, '{ chicken, plantain, salad }', {size:26, gap:300}); B.text(320, 365, '= 8 subsets ✓', {size:36, anchor:'middle', color:'green', weight:700}); }}
+      ],
+      [
+        {say:"One more trick question. What is the power set of the empty set? Think.", draw:function(){ B.title('Power set of ∅'); B.text(320, 165, 'P(∅) = ?', {size:52, anchor:'middle'}); }, hold:3500},
+        {say:"The empty set has zero items, and two to the power zero is one. So there is exactly one subset, which is the empty set itself. So the answer is a set containing the empty set.", draw:function(){ B.text(320, 240, '2⁰ = 1 subset', {size:34, anchor:'middle'}); B.text(320, 310, 'P(∅) = { ∅ }', {size:50, anchor:'middle', color:'blue', weight:700}); }},
+        {say:"Notice that the answer is not the empty set. It is a set holding the empty set, so it has one item. Watch out for that one.", draw:function(){ B.text(320, 370, 'not ∅: it has ONE item', {size:28, anchor:'middle', color:'red'}); }}
+      ],
+      [
+        {say:"Pause and think. How many subsets does a set with four elements have? And how many proper subsets?", draw:function(){ B.title('Quick check'); B.text(320, 170, '{ a, b, c, d }', {size:46, anchor:'middle'}); B.text(320, 235, 'subsets = ?     proper = ?', {size:32, anchor:'middle', color:'red'}); }, hold:4000},
+        {say:"Four elements, so two to the power four, which is sixteen subsets. Remove the full set itself and you get fifteen proper subsets.", draw:function(){ B.text(320, 320, '2⁴ = 16      16 − 1 = 15', {size:40, anchor:'middle', color:'green', weight:700}); }}
+      ],
+      [
+        {say:"Let's recap. The element symbol asks if one item is in the bag. The subset symbol asks if you can build a smaller bag from the big bag. And the empty set is a subset of every set.", draw:function(){ B.title('Recap: lesson 3'); B.text(50, 140, '∈  one ITEM in the bag?', {size:30}); B.text(50, 190, '⊆  build a smaller BAG?', {size:30}); B.text(50, 240, '∅ ⊆ every set', {size:30}); }},
+        {say:"A set with n items has two to the power n subsets, and two to the power n, minus one, proper subsets. Now go and try the practice questions.", draw:function(){ B.text(50, 300, 'n items → 2ⁿ subsets', {size:30, color:'blue'}); B.text(50, 350, 'proper subsets = 2ⁿ − 1', {size:30, color:'green'}); }}
+      ]
+    ]},
+    {title:'Union, intersection & co.', steps:[
+      [
+        {say:"Now let's draw. There are seven students in a hostel room. This box is the whole room and we call it the universal set U.", draw:function(){ venn({part:'u', animate:true}); }},
+        {say:"This blue circle A is the people who eat amala.", draw:function(){ venn({part:'a', animate:true}); }},
+        {say:"And this red circle B is the people who eat jollof. Notice that the circles overlap. That middle part is very important.", draw:function(){ venn({part:'b', animate:true}); }}
+      ],
+      [
+        {say:"Tobi and Femi eat amala only. So they go inside A, but outside B.", draw:function(){ venn(); names(['Tobi','Femi'], true); }},
+        {say:"Dayo and Ada eat jollof only. So they go inside B, but outside A.", draw:function(){ names(['Dayo','Ada'], true); }},
+        {say:"Kemi and Musa eat both. So where do they go? In the overlap, the part both circles share.", draw:function(){ names(['Kemi','Musa'], true); }},
+        {say:"And Ngozi? She eats neither. She's a beans person. So she's outside both circles, but still inside the room.", draw:function(){ names(['Ngozi'], true); }}
+      ],
+      [
+        {say:"First union. We write A, then the cup symbol, then B, and we read it as A union B. Remember union means or. So it's everybody who eats amala, or jollof, or both.", draw:function(){ room(); B.shade('a', {keep:true}); B.shade('ab', {keep:true}); B.shade('b'); }},
+        {say:"So we shade both circles completely. That's Tobi, Femi, Kemi, Musa, Dayo and Ada. And notice that Kemi and Musa are written only once. No repeats.", draw:function(){ result('A ∪ B = {Tobi, Femi, Kemi, Musa, Dayo, Ada}'); }}
+      ],
+      [
+        {say:"Next intersection. We write A, then the upside down cup, then B, and we read it as A intersection B. It means and. So who eats amala and jollof?", draw:function(){ room(); }, hold:2500},
+        {say:"Only the people in the overlap. Kemi and Musa.", draw:function(){ B.shade('ab'); result('A ∩ B = {Kemi, Musa}'); }}
+      ],
+      (function(){ var s1, s2; return [
+        {say:"Now A minus B. Start with everybody in A.", draw:function(){ room(); s1 = B.shade('a', {keep:true}); s2 = B.shade('ab'); }},
+        {say:"Now remove anybody who is also in B. Kemi and Musa are in B, so we remove them.", draw:function(){ B.fade([s2]); }},
+        {say:"We're left with Tobi and Femi. The amala people who don't touch jollof.", draw:function(){ result('A − B = {Tobi, Femi}'); }}
+      ]; })(),
+      [
+        {say:"Now A prime is the complement of A. It's everybody in the room who is not in A. So everything outside the blue circle.", draw:function(){ room(); B.shade('b', {keep:true}); B.shade('out'); }},
+        {say:"That's Dayo, Ada, and don't forget Ngozi. She's outside both circles, but she's still in the room, so she counts.", draw:function(){ result("A′ = {Dayo, Ada, Ngozi}"); }},
+        {say:"Many students forget the people outside the circles. Don't be that person."}
+      ],
+      [
+        {say:"Next is symmetric difference. We write it with a small triangle symbol called delta. It means one side only with no sharing.", draw:function(){ room(); B.shade('a', {keep:true}); B.shade('b'); }},
+        {say:"Kemi and Musa eat both, so they're kicked out. The answer is Tobi, Femi, Dayo and Ada. In other words it's A minus B, joined with B minus A.", draw:function(){ result('A Δ B = {Tobi, Femi, Dayo, Ada}'); }}
+      ],
+      [
+        {say:"Here's a useful fact from your slides. A minus B is the same as A intersection B prime. That means in A, and not in B. It's the same shading.", draw:function(){ room(); B.shade('a'); result('A − B  =  A ∩ B′'); }}
+      ],
+      [
+        {say:"Sometimes two circles share nobody. For example, one hundred level students and four hundred level students. Nobody is in both.", draw:function(){ B.title('Disjoint sets'); B.circle(200, 210, 95, {color:'blue'}); B.circle(440, 210, 95, {color:'red'}); B.text(200, 218, '100 level', {size:28, anchor:'middle', color:'blue'}); B.text(440, 218, '400 level', {size:28, anchor:'middle', color:'red'}); }},
+        {say:"Their intersection is the empty set. We call them disjoint sets.", draw:function(){ B.text(320, 365, 'A ∩ B = ∅   →   disjoint', {size:32, anchor:'middle', color:'green', weight:700}); }}
+      ],
+      [
+        {say:"And here are two quick facts. The complement of U, which is everybody, is the empty set. Nobody is outside everybody.", draw:function(){ B.title('Complement of U and ∅'); B.text(320, 180, 'U′ = ∅', {size:56, anchor:'middle', color:'blue', weight:700}); }},
+        {say:"And the complement of the empty set is U. Everybody is outside nobody.", draw:function(){ B.text(320, 290, '∅′ = U', {size:56, anchor:'middle', color:'red', weight:700}); }}
+      ],
+      [
+        {say:"Now exercise one from your slides. U is the numbers from one to ten. P is the prime numbers, two, three, five and seven. And E is the even numbers, two, four, six, eight and ten.", draw:function(){ venn({la:'P · primes', lb:'E · evens'}); result('U = {1, 2, …, 10}'); }},
+        {say:"Two is prime and even, so two goes in the overlap. Three, five and seven are prime only.", draw:function(){ B.text(320, 197, '2', {size:34, anchor:'middle', color:'red', weight:700}); [['3',215,160],['5',195,200],['7',220,240]].forEach(function(n){ B.text(n[1], n[2], n[0], {size:32, anchor:'middle', gap:250}); }); }},
+        {say:"Four, six, eight and ten are even only. And what about one and nine? They are neither prime nor even, so they go outside both circles, but still inside U.", draw:function(){ [['4',425,155],['6',450,195],['8',425,235],['10',418,268]].forEach(function(n){ B.text(n[1], n[2], n[0], {size:32, anchor:'middle', gap:250}); }); B.text(150, 300, '1', {size:32, anchor:'middle', color:'muted'}); B.text(505, 300, '9', {size:32, anchor:'middle', color:'muted'}); }},
+        {say:"So P union E is two, three, four, five, six, seven, eight and ten. And P intersection E is just two.", draw:function(){ B.shade('ab'); }}
+      ],
+      [
+        {say:"Pause and think. Using the same numbers, what is P minus E? That means prime, but not even.", draw:function(){ B.title('Quick check'); B.text(320, 150, 'P = {2, 3, 5, 7}     E = {2, 4, 6, 8, 10}', {size:26, anchor:'middle'}); B.text(320, 230, 'P − E = ?', {size:46, anchor:'middle', color:'red'}); }, hold:4000},
+        {say:"Start with the primes, two, three, five and seven. Then remove anything that is even. Only two is even, so we remove it. The answer is three, five and seven.", draw:function(){ B.text(320, 320, 'P − E = {3, 5, 7}', {size:46, anchor:'middle', color:'green', weight:700}); }}
+      ],
+      [
+        {say:"Your turn. Pause and think. What is B minus A?", draw:function(){ room(); result('B − A = ?', 'red'); }, hold:4000},
+        {say:"It's the jollof people who don't eat amala. Dayo and Ada. And notice, A minus B and B minus A are not the same.", draw:function(){ B.shade('b'); }}
+      ],
+      [
+        {say:"Now a formula you will need for word problems. How many people are in A union B? Count A, count B, then subtract the overlap, because the overlap was counted twice.", draw:function(){ B.title('Counting a union'); B.text(320, 150, 'n(A ∪ B) = n(A) + n(B) − n(A ∩ B)', {size:32, anchor:'middle', color:'blue', weight:700, speed:40}); }},
+        {say:"Check it with our room. A has four people, B has four people, and two people are in both. Four plus four, minus two, gives six. And the union had exactly six people. It works.", draw:function(){ B.text(320, 235, '4 + 4 − 2 = 6  ✓', {size:44, anchor:'middle', speed:60}); B.text(320, 300, 'Kemi and Musa were counted twice,', {size:28, anchor:'middle', color:'red'}); B.text(320, 345, 'so we subtract them once', {size:28, anchor:'middle', color:'green'}); }}
+      ],
+      [
+        {say:"Let's recap. Union means or, so you shade both circles. Intersection means and, so you shade only the overlap.", draw:function(){ B.title('Recap: lesson 4'); B.text(50, 140, 'A ∪ B  = in A or B (or both)', {size:30}); B.text(50, 190, 'A ∩ B  = in both', {size:30}); }},
+        {say:"A minus B means in A, but not in B. A prime means everything in the room that is not in A, so don't forget the people outside both circles. Now go and play with the Try it tab.", draw:function(){ B.text(50, 240, 'A − B  = in A, not in B', {size:30}); B.text(50, 290, 'A′  = everything not in A', {size:30}); B.text(50, 350, "don't forget outside the circles!", {size:28, color:'red'}); }}
+      ]
+    ]},
+    {title:'Cartesian product', steps:[
+      [
+        {say:"Next is the Cartesian product. We write A, then a times sign, then B, and we read it as A cross B. Don't let the name scare you. It just means make every possible pair.", draw:function(){ B.title('A × B = every pair'); B.text(320, 200, 'A × B = { (a, b) : a ∈ A, b ∈ B }', {size:34, anchor:'middle', speed:45}); }},
+        {say:"In each pair, you take one item from A first, then one item from B.", draw:function(){ B.text(320, 285, 'one from A first, then one from B', {size:30, anchor:'middle', color:'red'}); }}
+      ],
+      [
+        {say:"For example, say you have two shirts, a white one and a blue one.", draw:function(){ B.title('Shirts and trousers'); B.text(50, 170, 'A = shirts = { white, blue }', {size:34, color:'blue'}); }},
+        {say:"And three trousers, black, brown and jeans. How many different outfits can you wear? Think.", draw:function(){ B.text(50, 250, 'B = trousers = { black, brown, jeans }', {size:32, color:'red'}); B.text(320, 340, 'how many outfits?', {size:32, anchor:'middle', color:'green'}); }, hold:3000}
+      ],
+      [
+        {say:"Let's pair them. White shirt with black trousers. White with brown. And white with jeans.", draw:function(){
+          B.text(80, 175, 'white', {size:34, color:'blue', weight:700, now:true}); B.text(80, 295, 'blue', {size:34, color:'blue', weight:700, now:true});
+          B.text(470, 135, 'black', {size:34, color:'red', weight:700, now:true}); B.text(470, 235, 'brown', {size:34, color:'red', weight:700, now:true}); B.text(470, 335, 'jeans', {size:34, color:'red', weight:700, now:true});
+          [125,225,325].forEach(function(y){ B.line(180, 165, 455, y, {color:'green', w:3, dur:500, gap:700}); });
+        }},
+        {say:"Now the blue shirt. Blue with black. Blue with brown. And blue with jeans.", draw:function(){ [125,225,325].forEach(function(y){ B.line(180, 285, 455, y, {color:'green', w:3, dur:500, gap:700}); }); }}
+      ],
+      [
+        {say:"Now count the lines. Six outfits. That's two shirts, times three trousers.", draw:function(){ B.title('How many outfits?'); B.text(320, 175, '2 × 3 = 6', {size:54, anchor:'middle', weight:700, speed:80}); }},
+        {say:"So the number of elements in A cross B is the number in A, times the number in B. In your slides, that's option D.", draw:function(){ B.text(320, 260, '|A × B| = |A| × |B|', {size:44, anchor:'middle', color:'blue', weight:700, speed:55}); B.text(320, 335, 'slide answer: (d) |A||B|', {size:30, anchor:'middle', color:'green'}); }}
+      ],
+      [
+        {say:"In set notation, we write each pair inside round brackets, not curly ones. Round brackets tell you that order matters. So A cross B is the set of these six pairs.", draw:function(){ B.title('Writing the pairs'); B.text(50, 140, 'A × B = {', {size:30}); B.text(70, 190, '(white, black), (white, brown), (white, jeans),', {size:22, speed:30}); B.text(70, 235, '(blue, black), (blue, brown), (blue, jeans) }', {size:22, speed:30}); B.text(320, 320, 'round brackets ( ) = order matters', {size:28, anchor:'middle', color:'red'}); }}
+      ],
+      [
+        {say:"One more thing. Order matters here. In each pair, the shirt comes first, then the trouser.", draw:function(){ B.title('Order matters'); B.text(320, 175, '(white, black)', {size:44, anchor:'middle'}); B.text(320, 220, 'shirt first, then trouser', {size:28, anchor:'middle', color:'red'}); }},
+        {say:"So white and black is not the same pair as black and white. And that's why A cross B is usually not equal to B cross A.", draw:function(){ B.text(320, 295, '(white, black) ≠ (black, white)', {size:36, anchor:'middle', speed:45}); B.text(320, 355, 'so  A × B ≠ B × A', {size:34, anchor:'middle', color:'blue'}); }}
+      ],
+      [
+        {say:"Let's see it with our clothes. If we flip it and write B cross A, the trouser now comes first in every pair.", draw:function(){ B.title('B × A is different'); B.text(40, 150, 'B × A = { (black, white), (black, blue),', {size:24}); B.text(70, 195, '(brown, white), (brown, blue),', {size:24}); B.text(70, 240, '(jeans, white), (jeans, blue) }', {size:24}); }},
+        {say:"It still has six pairs, because three times two is six. But the pairs themselves are different. So the two sets have the same size, but they are not equal.", draw:function(){ B.text(320, 325, 'same size (6), but  A × B ≠ B × A', {size:28, anchor:'middle', color:'red'}); }}
+      ],
+      [
+        {say:"You can also cross three sets or more. A cross B cross C gives you groups of three, like shirt, trouser and shoe.", draw:function(){ B.title('More than two sets'); B.text(320, 170, 'A × B × C = { (a, b, c) }', {size:40, anchor:'middle'}); }},
+        {say:"Two shirts, three trousers and two pairs of shoes. Two times three times two is twelve. So that's twelve outfits.", draw:function(){ B.text(320, 265, '2 × 3 × 2 = 12', {size:48, anchor:'middle', color:'blue', weight:700}); }}
+      ],
+      [
+        {say:"Pause and think. If A has three elements and B has four elements, how many pairs are in A cross B?", draw:function(){ B.title('Quick check'); B.text(320, 180, '|A| = 3,   |B| = 4', {size:44, anchor:'middle'}); B.text(320, 245, '|A × B| = ?', {size:44, anchor:'middle', color:'red'}); }, hold:4000},
+        {say:"Three times four gives twelve pairs. You don't need to list them. Just multiply.", draw:function(){ B.text(320, 330, '3 × 4 = 12', {size:50, anchor:'middle', color:'green', weight:700}); }}
+      ],
+      [
+        {say:"Let's recap. A cross B is every possible pair, with one item from A first and one item from B second. Each pair goes in round brackets, because order matters.", draw:function(){ B.title('Recap: lesson 5'); B.text(50, 150, 'A × B = every pair (a, b)', {size:32}); B.text(50, 205, 'order matters: A × B ≠ B × A', {size:32}); }},
+        {say:"To count the pairs, just multiply. The number in A, times the number in B. Now go and try the practice questions.", draw:function(){ B.text(50, 280, '|A × B| = |A| × |B|', {size:36, color:'blue', weight:700}); }}
+      ]
+    ]},
+    {title:'Laws & De Morgan', steps:[
+      [
+        {say:"Now the laws. They look like plenty, but each one says something obvious. Let's go.", draw:function(){ B.title('The laws of sets'); }},
+        {say:"First the identity law. A union the empty set is A, because adding nobody to a group changes nothing. And A intersection U is A.", draw:function(){ B.text(40, 140, 'Identity:', {size:30, color:'blue', weight:700}); B.text(240, 140, 'A ∪ ∅ = A   ·   A ∩ U = A', {size:30}); }},
+        {say:"Next the domination law. A union U is U. Join everybody, and you get everybody. A intersection the empty set is the empty set. Share with nobody, and you get nobody.", draw:function(){ B.text(40, 210, 'Domination:', {size:30, color:'blue', weight:700}); B.text(240, 210, 'A ∪ U = U   ·   A ∩ ∅ = ∅', {size:30}); }},
+        {say:"Then the idempotent law. A union A is A, and A intersection A is A. A group combined with itself is still itself.", draw:function(){ B.text(40, 280, 'Idempotent:', {size:30, color:'blue', weight:700}); B.text(240, 280, 'A ∪ A = A   ·   A ∩ A = A', {size:30}); }}
+      ],
+      [
+        {say:"Now the complement laws. A union A prime is U, because everyone is either in A, or not in A. Your slides call this excluded middle.", draw:function(){ B.title('Complement laws'); B.text(60, 150, 'A ∪ A′ = U', {size:40}); B.text(330, 150, '(excluded middle)', {size:24, color:'muted'}); }},
+        {say:"A intersection A prime is the empty set. Nobody can be in A and not in A at the same time. Your slides call this uniqueness.", draw:function(){ B.text(60, 230, 'A ∩ A′ = ∅', {size:40}); B.text(330, 230, '(uniqueness)', {size:24, color:'muted'}); }},
+        {say:"Then double complement. A prime prime means the opposite of the opposite of A, which is just A. Two nots cancel out.", draw:function(){ B.text(60, 310, '(A′)′ = A', {size:40}); B.text(330, 310, '(double complement)', {size:24, color:'muted'}); }}
+      ],
+      [
+        {say:"The commutative law. A union B equals B union A. Order doesn't matter.", draw:function(){ B.title('Moving things around'); B.text(50, 130, 'Commutative:   A ∪ B = B ∪ A', {size:30}); }},
+        {say:"The associative law. When the symbol is the same all through, it doesn't matter where you put the brackets.", draw:function(){ B.text(50, 195, 'Associative:   (A ∪ B) ∪ C = A ∪ (B ∪ C)', {size:28}); }},
+        {say:"The distributive law. A intersection, bracket B union C, equals A intersection B, union, A intersection C. It's just like opening brackets in algebra.", draw:function(){ B.text(50, 275, 'A ∩ (B ∪ C) = (A ∩ B) ∪ (A ∩ C)', {size:30, color:'blue'}); B.text(50, 335, 'like   a(b + c) = ab + ac', {size:28, color:'red'}); }},
+        {say:"And it works with the symbols swapped too. A union, bracket B intersection C, equals A union B, intersection, A union C."}
+      ],
+      [
+        {say:"Now De Morgan's laws. They look scary, but there's only one trick to remember.", draw:function(){ B.title("De Morgan's law"); B.text(320, 195, '(A ∪ B)′ = A′ ∩ B′', {size:54, anchor:'middle', color:'blue', weight:700, speed:60}); }},
+        {say:"Break the bar and flip the sign. The complement over the whole of A union B breaks into two, A prime and B prime, and the union flips to intersection.", draw:function(){ B.text(320, 290, 'break the bar, flip the sign', {size:36, anchor:'middle', color:'red'}); }}
+      ],
+      (function(){ var u; return [
+        {say:"Let's prove it with a picture. Left side first. A union B is both circles.", draw:function(){ venn({la:'A', lb:'B'}); u = [B.shade('a', {color:'blue', op:0.2, keep:true}), B.shade('ab', {color:'blue', op:0.2, keep:true}), B.shade('b', {color:'blue', op:0.2})]; }},
+        {say:"The complement of that is everything outside it. So it's only the region outside both circles.", draw:function(){ B.fade(u, {keep:true}); B.shade('out'); result('(A ∪ B)′ = outside both circles'); }}
+      ]; })(),
+      [
+        {say:"Now the right side. A prime is everything outside circle A. Let's colour it blue.", draw:function(){ venn({la:'A', lb:'B'}); B.shade('b', {color:'blue', op:0.18, keep:true}); B.shade('out', {color:'blue', op:0.18}); }},
+        {say:"B prime is everything outside circle B. Let's colour it red.", draw:function(){ B.shade('a', {color:'red', op:0.18, keep:true}); B.shade('out', {color:'red', op:0.18}); }},
+        {say:"A prime intersection B prime means where both colours meet. Look. It's the same region outside both circles. So the two sides are equal.", draw:function(){ B.shade('out', {op:0.7}); result('A′ ∩ B′ = the same region ✓', 'green'); }}
+      ],
+      [
+        {say:"The second law works the same way. The complement of A intersection B, equals A prime union B prime.", draw:function(){ B.title('Both laws'); B.text(320, 165, '(A ∪ B)′ = A′ ∩ B′', {size:46, anchor:'middle', now:true}); B.text(320, 240, '(A ∩ B)′ = A′ ∪ B′', {size:46, anchor:'middle', speed:55}); }},
+        {say:"Break the bar and flip the sign. Write that line in your jotter.", draw:function(){ B.text(320, 335, 'break the bar, flip the sign', {size:36, anchor:'middle', color:'red'}); }}
+      ],
+      [
+        {say:"Let's also check it with numbers, the way the exam likes it. Let U be one to five. Let A be one and two. And let B be two and three.", draw:function(){ B.title('Check with numbers'); B.text(50, 135, 'U = {1, 2, 3, 4, 5}    A = {1, 2}    B = {2, 3}', {size:24}); }},
+        {say:"Left side first. A union B is one, two and three. Its complement is everything else in U, which is four and five.", draw:function(){ B.text(50, 200, 'A ∪ B = {1, 2, 3}    so    (A ∪ B)′ = {4, 5}', {size:24, color:'blue'}); }},
+        {say:"Now the right side. A prime is three, four and five. B prime is one, four and five. What do they share? Four and five. Both sides give four and five, so the law holds.", draw:function(){ B.text(50, 260, 'A′ = {3, 4, 5}     B′ = {1, 4, 5}', {size:26, color:'red'}); B.text(50, 310, 'A′ ∩ B′ = {4, 5}', {size:30, color:'red'}); B.text(320, 370, 'both sides = {4, 5}  ✓', {size:32, anchor:'middle', color:'green', weight:700}); }}
+      ],
+      [
+        {say:"Here's how the laws show up in the exam. Simplify A prime prime, intersection A. Pause and think.", draw:function(){ B.title('Using the laws'); B.text(320, 160, '(A′)′ ∩ A = ?', {size:48, anchor:'middle'}); }, hold:4000},
+        {say:"First double complement. A prime prime is just A. So now we have A intersection A. And by the idempotent law, that is just A. So the answer is A.", draw:function(){ B.text(320, 240, '= A ∩ A', {size:40, anchor:'middle', color:'blue'}); B.text(320, 300, '= A', {size:48, anchor:'middle', color:'green', weight:700}); B.text(320, 360, 'double complement, then idempotent', {size:26, anchor:'middle', color:'muted'}); }}
+      ],
+      [
+        {say:"Let's recap the laws. A union the empty set is A, and A intersection U is A. A union A prime is everything, and A intersection A prime is empty.", draw:function(){ B.title('Recap: lesson 6'); B.text(50, 140, 'A ∪ ∅ = A      A ∩ U = A', {size:30}); B.text(50, 190, 'A ∪ A′ = U      A ∩ A′ = ∅', {size:30}); }},
+        {say:"And for De Morgan, break the bar, and flip the sign. Union becomes intersection, and intersection becomes union. Now go and test yourself in the practice tab.", draw:function(){ B.text(50, 260, '(A ∪ B)′ = A′ ∩ B′', {size:34, color:'blue'}); B.text(50, 315, '(A ∩ B)′ = A′ ∪ B′', {size:34, color:'blue'}); B.text(50, 370, 'break the bar, flip the sign', {size:28, color:'red'}); }}
+      ]
+    ]},
+    {title:'3-circle word problems', steps:[
+      [
+        {say:"This is the question that scatters people in the exam. Let's read it slowly.", draw:function(){ B.title('Exercise 2'); }},
+        {say:"Sixty-four students took maths. Ninety-four took chemistry. And fifty-eight took physics.", draw:function(){ B.text(60, 135, 'Maths 64   ·   Chem 94   ·   Physics 58', {size:30}); }},
+        {say:"Twenty-eight took maths and physics. Twenty-six took maths and chemistry. And twenty-two took chemistry and physics.", draw:function(){ B.text(60, 195, 'M & P 28   ·   M & C 26   ·   C & P 22', {size:30}); }},
+        {say:"And fourteen took all three. The question is how many took only one course.", draw:function(){ B.text(60, 255, 'All three 14', {size:30}); B.text(60, 335, 'One course only = ?', {size:40, color:'red', weight:700}); }}
+      ],
+      [
+        {say:"First the trap most students fall into. They put twenty-eight straight into the diagram.", draw:function(){ B.title('The trap'); B.text(60, 140, '"28 took Maths and Physics"', {size:34}); }},
+        {say:"But those twenty-eight include the fourteen who took all three. If you don't remove them, you count them twice, and your answer will be wrong.", draw:function(){ B.text(60, 205, '→ this 28 INCLUDES the 14 in the middle', {size:30, color:'red'}); }},
+        {say:"So here's the golden rule. Start from the middle, then subtract your way out.", draw:function(){ B.text(320, 320, 'start from the MIDDLE,', {size:38, anchor:'middle', color:'green', weight:700}); B.text(320, 365, 'then subtract your way out', {size:34, anchor:'middle', color:'green'}); }}
+      ],
+      [
+        {say:"Draw three circles, for maths, chemistry and physics. Every part of this diagram is a different group of students.", draw:function(){ three(0, true); }}
+      ],
+      [
+        {say:"Step one is the middle. Fourteen took all three, so write fourteen in the centre where all three circles meet.", draw:function(){ three(0); writeNum(1); calc(0, 'all three = 14'); }}
+      ],
+      [
+        {say:"Step two. Maths and chemistry is twenty-six. But fourteen of them are already in the middle.", draw:function(){ three(1); calc(0, 'M & C:  26 − 14'); }},
+        {say:"So twenty-six minus fourteen gives twelve. Twelve students took maths and chemistry only.", draw:function(){ writeNum(2); calc(1, '= 12', 'red'); }}
+      ],
+      [
+        {say:"Do the same for maths and physics. Twenty-eight minus fourteen gives fourteen.", draw:function(){ three(2); writeNum(3); calc(0, 'M & P:  28 − 14 = 14'); }},
+        {say:"And for chemistry and physics. Twenty-two minus fourteen gives eight.", draw:function(){ writeNum(4); calc(1, 'C & P:  22 − 14 = 8'); }}
+      ],
+      [
+        {say:"Step three is maths only. Look at the maths circle. It already has twelve, fourteen and fourteen inside. Add them up and you get forty.", draw:function(){ three(4); calc(0, 'inside: 12 + 14 + 14 = 40'); }},
+        {say:"The maths total is sixty-four. Sixty-four minus forty gives twenty-four. So twenty-four students took maths only.", draw:function(){ writeNum(5); calc(1, 'Maths only: 64 − 40 = 24', 'red'); }}
+      ],
+      [
+        {say:"Now chemistry only. Inside the chemistry circle, we have twelve, eight and fourteen. That's thirty-four. Ninety-four minus thirty-four gives sixty.", draw:function(){ three(5); writeNum(6); calc(0, 'Chem: 94 − 34 = 60'); }},
+        {say:"And physics only. Inside, we have fourteen, eight and fourteen. That's thirty-six. Fifty-eight minus thirty-six gives twenty-two.", draw:function(){ writeNum(7); calc(1, 'Physics: 58 − 36 = 22'); }}
+      ],
+      [
+        {say:"Now the answer. One course only means the three outer parts. Twenty-four, sixty and twenty-two.", draw:function(){ three(7); B.circle(215, 147, 26, {color:'red', w:3, dur:400, gap:200}); B.circle(425, 147, 26, {color:'red', w:3, dur:400, gap:200}); B.circle(320, 309, 26, {color:'red', w:3, dur:400}); }},
+        {say:"Add them up and you get one hundred and six students. That's your answer.", draw:function(){ calc(0, '24 + 60 + 22 = 106 ✓', 'red'); }},
+        {say:"Bonus. If they ask how many took at least one course, add every number in the diagram. That gives one hundred and fifty-four.", draw:function(){ calc(1, 'at least one = 154'); }}
+      ],
+      [
+        {say:"Pause and think. Using the same diagram, how many students took exactly two courses?", draw:function(){ B.title('Quick check'); B.text(320, 170, 'exactly two courses = ?', {size:40, anchor:'middle', color:'red'}); B.text(320, 230, 'hint: the double overlaps only', {size:26, anchor:'middle', color:'muted'}); }, hold:4000},
+        {say:"Exactly two means the double overlaps only, not the middle. That's twelve, fourteen and eight. Add them up and you get thirty-four students.", draw:function(){ B.text(320, 320, '12 + 14 + 8 = 34', {size:46, anchor:'middle', color:'green', weight:700}); }}
+      ],
+      [
+        {say:"Let's recap the method. Number one is to start with the middle.", draw:function(){ B.title('The method'); B.text(60, 140, '1.  middle first', {size:34}); }},
+        {say:"Number two is each double overlap minus the middle.", draw:function(){ B.text(60, 200, '2.  each overlap − middle', {size:34}); }},
+        {say:"Number three is each circle's total minus everything already inside it.", draw:function(){ B.text(60, 260, '3.  circle total − what\'s inside', {size:34}); }},
+        {say:"Practise this three times and this question will never scatter you again. Now go to the practice tab and try one yourself.", draw:function(){ B.text(320, 350, 'start from the middle!', {size:36, anchor:'middle', color:'green', weight:700}); }}
+      ]
+    ]}
+  ];
+
+  /* Voice */
+  var synth = ('speechSynthesis' in window) ? window.speechSynthesis : null;
+  var voices = [], voice = null, voiceOn = true, unlocked = false, speechId = 0;
+  function score(v){
+    var s = 0, n = (v.name || '') + ' ' + (v.voiceURI || '');
+    if (/en[-_]NG/i.test(v.lang)) s += 100;
+    if (/natural|neural|enhanced|premium|online/i.test(n)) s += 40;
+    if (/google/i.test(n)) s += 30;
+    if (/en[-_]GB/i.test(v.lang)) s += 20; else if (/en[-_](US|AU|ZA|IE|IN)/i.test(v.lang)) s += 10;
+    if (/compact|eloquence|novelty|bells|whisper|zarvox|bad news|bubbles|cellos|organ|trinoids|albert|jester|superstar|wobble|boing|grandma|grandpa|rocko|shelley|flo|reed|sandy/i.test(n)) s -= 80;
+    return s;
+  }
+  function loadVoices(){
+    if (!synth) { refreshVoiceList(); return; }
+    try { voices = synth.getVoices().filter(function(v){ return /^en/i.test(v.lang); }); } catch(e){ voices = []; }
+    voices.sort(function(a, b){ return score(b) - score(a); });
+    var saved = null; try { saved = localStorage.getItem('sets-voice'); } catch(e){}
+    voice = voices.find(function(v){ return v.voiceURI === saved; }) || voices[0] || null;
+    refreshVoiceList();
+  }
+  function refreshVoiceList(){
+    var sel = $('voiceSel'); sel.innerHTML = ''; sel.disabled = false;
+    if (audioOk !== false) { var r = document.createElement('option'); r.value = '__rec'; r.textContent = 'Nigerian teacher voice (recommended)'; if (useRecorded) r.selected = true; sel.appendChild(r); }
+    else useRecorded = false;
+    voices.forEach(function(v){ var o = document.createElement('option'); o.value = v.voiceURI; o.textContent = 'Phone voice: ' + v.name + ' (' + v.lang + ')'; if (!useRecorded && voice && v.voiceURI === voice.voiceURI) o.selected = true; sel.appendChild(o); });
+    if (!sel.options.length) { var n = document.createElement('option'); n.textContent = 'No voice on this browser'; sel.appendChild(n); sel.disabled = true; }
+  }
+  if (synth) { loadVoices(); try { synth.addEventListener('voiceschanged', loadVoices); } catch(e){ synth.onvoiceschanged = loadVoices; } }
+  else loadVoices();
+  $('voiceSel').addEventListener('change', function(){
+    var uri = this.value;
+    useRecorded = uri === '__rec';
+    if (!useRecorded) voice = voices.find(function(v){ return v.voiceURI === uri; }) || voice;
+    try { localStorage.setItem('sets-voice', uri); } catch(e){}
+    if (playing) runStep(true);
+  });
+  function unlock(){
+    if (unlocked || !synth) return; unlocked = true;
+    try { var u = new SpeechSynthesisUtterance(' '); u.volume = 0; synth.speak(u); } catch(e){}
+  }
+  /* Recorded Nigerian voice: audio/<clip id>.mp3 next to this page. Falls back to the phone's voice if the files aren't there. */
+  var clip = new Audio(), audioOk = null, useRecorded = true;
+  clip.preload = 'auto';
+  try { if (localStorage.getItem('sets-voice') && localStorage.getItem('sets-voice') !== '__rec') useRecorded = false; } catch(e){}
+  function clipId(c, s, b){ return 'L' + (c + 1) + '-S' + (s + 1 < 10 ? '0' : '') + (s + 1) + '-B' + (b + 1); }
+  function preload(id){ try { var a = new Audio(); a.preload = 'auto'; a.src = 'audio/' + id + '.mp3'; } catch(e){} }
+  function stopSpeech(){ speechId++; try { clip.pause(); clip.onended = clip.onerror = null; } catch(e){} if (synth) { try { synth.cancel(); } catch(e){} } }
+  function speak(text, cb, est, id){
+    var fired = false; function f(){ if (!fired) { fired = true; cb(); } }
+    if (voiceOn && useRecorded && audioOk !== false && id) {
+      var my = ++speechId;
+      var fallback = function(){ if (my !== speechId || fired) return; audioOk = false; refreshVoiceList(); speechId++; speakTTS(text, f, est); };
+      try {
+        clip.onended = function(){ if (my === speechId) { audioOk = true; f(); } };
+        clip.onerror = fallback;
+        clip.src = 'audio/' + id + '.mp3';
+        var pr = clip.play(); if (pr && pr.catch) pr.catch(function(err){ if (err && err.name === 'NotAllowedError') { later(f, est); } else fallback(); });
+        later(function(){ if (my === speechId && !fired) f(); }, est * 3 + 6000);
+      } catch(e){ fallback(); }
+      return;
+    }
+    speakTTS(text, f, est);
+  }
+  function speakTTS(text, cb, est){
+    var fired = false; function f(){ if (!fired) { fired = true; cb(); } }
+    if (!voiceOn || !synth) { later(f, est); return; }
+    var my = ++speechId, parts = text.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [text], i = 0, started = false;
+    function next(){
+      if (my !== speechId) return;
+      if (i >= parts.length) { f(); return; }
+      try {
+        var u = new SpeechSynthesisUtterance(parts[i++].trim());
+        if (voice) { u.voice = voice; u.lang = voice.lang; } else { u.lang = 'en-GB'; }
+        u.rate = 0.92; u.pitch = 1;
+        u.onstart = function(){ started = true; };
+        u.onend = function(){ later(next, 120); };
+        u.onerror = function(){ if (my === speechId) f(); };
+        synth.speak(u);
+      } catch(e){ f(); }
+    }
+    later(next, 60);
+    later(function(){ if (!started && my === speechId) f(); }, 3000);
+    later(function(){ if (my === speechId) f(); }, est * 2.5 + 5000);
+  }
+
+  /* Player */
+  var ch = 0, st = 0, playing = false, started = false, token = 0;
+  var done = {};
+  try { done = JSON.parse(localStorage.getItem('sets-done') || '{}') || {}; } catch(e){ done = {}; }
+  function steps(){ return CH[ch].steps; }
+  function stepText(){ return steps()[st].map(function(b){ return b.say; }).join(' '); }
+  function think(sec){
+    var t = $('think');
+    if (!sec) { t.hidden = true; return; }
+    t.hidden = false; t.textContent = 'Think… ' + sec;
+    for (var k = 1; k < sec; k++) (function(k){ later(function(){ t.textContent = 'Think… ' + (sec - k); }, k * 1000); })(k);
+    later(function(){ t.hidden = true; }, sec * 1000);
+  }
+  function runStep(animate){
+    clearTimers(); stopSpeech(); think(0); var my = ++token;
+    var beats = steps()[st];
+    B.reset(!animate);
+    updateUI();
+    if (!animate) { beats.forEach(function(b){ if (b.draw) b.draw(); }); $('cap').textContent = stepText(); return; }
+    var i = 0;
+    function beat(){
+      if (my !== token) return;
+      if (i >= beats.length) { later(advance, 700); return; }
+      var b = beats[i]; B.beat(); if (b.draw) b.draw();
+      $('cap').textContent = b.say;
+      var est = b.say.split(/\s+/).length * 420 + 400, sd = false, dd = false;
+      function next(){
+        if (my !== token || !(sd && dd)) return;
+        i++;
+        if (b.hold) { think(Math.round(b.hold / 1000)); later(beat, b.hold); } else later(beat, 450);
+      }
+      later(function(){ dd = true; next(); }, B.end + 250);
+      var id = clipId(ch, st, i);
+      if (useRecorded && audioOk !== false) { var nb = beats[i + 1] ? clipId(ch, st, i + 1) : (steps()[st + 1] ? clipId(ch, st + 1, 0) : null); if (nb) preload(nb); }
+      speak(b.say, function(){ sd = true; next(); }, est, id);
+    }
+    beat();
+  }
+  function advance(){
+    if (st < steps().length - 1) { st++; }
+    else {
+      done[ch] = true; try { localStorage.setItem('sets-done', JSON.stringify(done)); } catch(e){}
+      if (ch < CH.length - 1) { ch++; st = 0; }
+      else { playing = false; runStep(false); $('cap').textContent = "That's all 7 lessons. Open Practice below and test yourself."; renderChapters(); return; }
+    }
+    runStep(true); renderChapters();
+  }
+  function play(){ unlock(); playing = true; started = true; runStep(true); }
+  function pause(){ playing = false; runStep(false); }
+  function go(d){
+    var n = st + d;
+    if (n < 0) { if (ch > 0) { ch--; st = steps().length - 1; } else st = 0; }
+    else if (n >= steps().length) { if (ch < CH.length - 1) { ch++; st = 0; } }
+    else st = n;
+    if (playing) unlock();
+    runStep(playing); renderChapters();
+  }
+  function updateUI(){
+    $('chNum').textContent = 'Lesson ' + (ch + 1) + ' of ' + CH.length;
+    $('chTitle').textContent = CH[ch].title;
+    $('stepl').textContent = (st + 1) + ' / ' + steps().length;
+    var p = $('prog'); p.innerHTML = '';
+    for (var i = 0; i < steps().length; i++) { var d = document.createElement('i'); if (i <= st) d.className = 'on'; p.appendChild(d); }
+    $('overlay').hidden = playing || started;
+    $('playTx').textContent = playing ? 'Pause' : 'Play';
+    $('icPlay').innerHTML = playing ? '<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>' : '<path d="M7 4l13 8-13 8z"/>';
+    $('btnPrev').disabled = ch === 0 && st === 0;
+  }
+  function renderChapters(){
+    var box = $('chapters'); box.innerHTML = '';
+    CH.forEach(function(c, i){
+      var b = document.createElement('button'); b.type = 'button'; b.id = 'chap-' + i;
+      b.className = 'chap' + (i === ch ? ' cur' : '') + (done[i] ? ' done' : '');
+      var mins = Math.max(1, Math.round(c.steps.reduce(function(a, s){ return a + s.reduce(function(x, bt){ return x + bt.say.split(/\s+/).length; }, 0); }, 0) / 140));
+      b.innerHTML = '<span class="n">' + (done[i] ? '✓' : (i + 1)) + '</span><span class="tx"><b></b><small>about ' + mins + ' min</small></span>';
+      b.querySelector('b').textContent = c.title;
+      b.addEventListener('click', function(){ ch = i; st = 0; play(); renderChapters(); document.querySelector('.player').scrollIntoView({behavior:'smooth', block:'start'}); });
+      box.appendChild(b);
+    });
+  }
+  $('overlay').addEventListener('click', play);
+  $('btnPlay').addEventListener('click', function(){ playing ? pause() : play(); });
+  $('btnPrev').addEventListener('click', function(){ go(-1); });
+  $('btnNext').addEventListener('click', function(){ go(1); });
+  $('btnVoice').addEventListener('click', function(){
+    voiceOn = !voiceOn;
+    this.setAttribute('aria-pressed', voiceOn ? 'true' : 'false');
+    $('voiceTx').textContent = voiceOn ? 'Voice on' : 'Voice off';
+    $('wave').style.display = voiceOn ? '' : 'none';
+    if (playing) { unlock(); runStep(true); }
+  });
+  document.addEventListener('visibilitychange', function(){ if (document.hidden && playing) pause(); });
+  runStep(false); renderChapters();
+
+
+  /* tabs */
+  var tabs = document.querySelectorAll('.tab');
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){
+      tabs.forEach(function(x){ var on = x === t; x.setAttribute('aria-selected', on ? 'true' : 'false'); $(x.getAttribute('aria-controls')).hidden = !on; });
+    });
+  });
+
+  /* venn explorer */
+  var ops = {
+    union:{r:['a','ab','b'],s:'A ∪ B = <b>{Tobi, Femi, Kemi, Musa, Dayo, Ada}</b>',p:'Everybody who eats amala OR jollof, or both. Kemi and Musa are written once.',m:'∪ = Unite. Everybody comes.'},
+    inter:{r:['ab'],s:'A ∩ B = <b>{Kemi, Musa}</b>',p:'Only the people who eat BOTH.',m:'∩ = iN both.'},
+    amb:{r:['a'],s:'A − B = <b>{Tobi, Femi}</b>',p:"Amala people who don't touch jollof.",m:"A's people, minus anybody in B."},
+    bma:{r:['b'],s:'B − A = <b>{Dayo, Ada}</b>',p:'Jollof people who don\'t eat amala. A − B is not the same as B − A.',m:"B's people, minus anybody in A."},
+    ac:{r:['b','out'],s:'A′ = <b>{Dayo, Ada, Ngozi}</b>',p:'Everybody in U who is NOT in A. Ngozi counts too.',m:'Everybody outside the circle.'},
+    sym:{r:['a','b'],s:'A Δ B = <b>{Tobi, Femi, Dayo, Ada}</b>',p:'In exactly one circle. It equals (A − B) ∪ (B − A).',m:'One side only. No sharing.'},
+    uc:{r:['out'],s:'(A ∪ B)′ = <b>{Ngozi}</b>',p:'Outside the union: eats neither.',m:'Outside both circles.'},
+    dm:{r:['out'],s:'A′ ∩ B′ = <b>{Ngozi}</b>',p:'Not amala AND not jollof. Same shading as (A ∪ B)′. That is De Morgan.',m:'Break the bar, flip the sign.'}
+  };
+  var regs = document.querySelectorAll('#explorer .region'), xb = document.querySelectorAll('#explorer .chips button');
+  function showOp(k){
+    var o = ops[k];
+    regs.forEach(function(e){ e.classList.toggle('on', o.r.indexOf(e.getAttribute('data-r')) > -1); });
+    xb.forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-op') === k ? 'true' : 'false'); });
+    $('rs').innerHTML = o.s; $('rp').textContent = o.p; $('rm').textContent = o.m;
+  }
+  xb.forEach(function(b){ b.addEventListener('click', function(){ showOp(b.getAttribute('data-op')); }); });
+  showOp('union');
+
+  /* quiz */
+  var qs = [
+    {q:'A = {2, 4, 6} and B = {4, 6, 8, 10}. What is A ∩ B?',o:['{2, 4, 6, 8, 10}','{4, 6}','{2}','{8, 10}'],a:1,e:'Intersection = only what is in <b>both</b>: 4 and 6.'},
+    {q:'Using the same A and B, what is n(A ∪ B)?',o:['7','5','3','2'],a:1,e:'A ∪ B = {2, 4, 6, 8, 10}. Or: 3 + 4 − 2 = <b>5</b>.'},
+    {q:'How many subsets does {a, b, c} have?',o:['3','6','8','9'],a:2,e:'n items → 2ⁿ. 2³ = <b>8</b>.'},
+    {q:'Is ∅ ⊆ {1, 2}?',o:['Yes','No'],a:0,e:'<b>Yes.</b> The empty set is a subset of every set.'},
+    {q:'U = {1, 2, …, 8} and A = {1, 3, 5, 7}. What is A′?',o:['{1, 3, 5, 7}','{2, 4, 6, 8}','∅','{0, 2, 4, 6, 8}'],a:1,e:'Everything in U not in A: <b>{2, 4, 6, 8}</b>. 0 is not in U.'},
+    {q:'Which is a proper subset of {1, 2, 3}?',o:['{1, 2, 3}','{1, 3}','{4}','{1, 2, 3, 4}'],a:1,e:'Built from its elements and <b>smaller</b>: {1, 3}.'},
+    {q:'In a class of 50, 30 like football, 25 like basketball, 10 like both. How many like neither?',o:['5','15','45','0'],a:0,e:'At least one = 30 + 25 − 10 = 45. Neither = 50 − 45 = <b>5</b>.'},
+    {q:'A = {1, 2} and B = {x, y, z}. What is |A × B|?',o:['5','6','8','9'],a:1,e:'|A| × |B| = 2 × 3 = <b>6</b>.'},
+    {q:"By De Morgan's law, (A ∩ B)′ equals:",o:['A′ ∩ B′','A ∪ B','A′ ∪ B′','(A ∪ B)′'],a:2,e:'Break the bar, flip the sign: <b>A′ ∪ B′</b>.'},
+    {q:'100 students: 45 eat rice, 40 beans, 35 yam. 15 eat rice & beans, 12 rice & yam, 10 beans & yam, 5 eat all three. How many eat rice only?',o:['18','23','28','33'],a:1,e:'Middle = 5. Rice & beans only = 10. Rice & yam only = 7. Rice only = 45 − (10 + 7 + 5) = <b>23</b>.'}
+  ];
+  var quiz = $('quiz'), answered = 0, correct = 0, scoreEl = $('score');
+  function upd(){ scoreEl.textContent = answered < qs.length ? correct + ' correct · ' + answered + ' / ' + qs.length + ' answered' : 'Done: ' + correct + ' / ' + qs.length + (correct >= 8 ? ' · you are ready' : ' · rewatch lessons 4 and 7'); }
+  qs.forEach(function(it, i){
+    var box = document.createElement('div'); box.className = 'q';
+    var h = document.createElement('div'); h.className = 'qh'; h.innerHTML = '<span class="qn">' + (i + 1) + '</span><p></p>'; h.querySelector('p').textContent = it.q;
+    var op = document.createElement('div'); op.className = 'opts';
+    var ex = document.createElement('p'); ex.className = 'explain'; ex.hidden = true;
+    it.o.forEach(function(t, j){
+      var b = document.createElement('button'); b.type = 'button'; b.id = 'q' + i + 'o' + j; b.textContent = t;
+      b.addEventListener('click', function(){
+        op.querySelectorAll('button').forEach(function(x, k){ x.disabled = true; if (k === it.a) x.classList.add('right'); });
+        if (j !== it.a) b.classList.add('wrong'); else correct++;
+        answered++; ex.innerHTML = (j === it.a ? '<b>Correct.</b> ' : '<b>Not quite.</b> ') + it.e; ex.hidden = false; upd();
+      });
+      op.appendChild(b);
+    });
+    box.appendChild(h); box.appendChild(op); box.appendChild(ex); quiz.appendChild(box);
+  });
+  upd();
+})();
+</script>

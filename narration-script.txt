@@ -1,0 +1,656 @@
+Narration script
+One line per audio clip. Save each clip as the ID shown, e.g. L1-S01-B1.mp3
+
+==== Lesson 1: What is a set? ====
+
+L1-S01-B1
+Good evening class. Today we're learning sets and I promise you it's easier than it looks.
+
+L1-S01-B2
+A set is simply a collection of things that belong together. That's all it is.
+
+L1-S01-B3
+We write the members inside curly brackets, like this.
+
+L1-S01-B4
+Each person inside is called an element. Tobi is an element, Kemi is an element, and Femi is an element.
+
+L1-S02-B1
+Let me give you an example you know very well. Your class WhatsApp group.
+
+L1-S02-B2
+The group itself is the set. And the members, Tobi, Kemi, Femi, Dayo and Ada, are the elements.
+
+L1-S02-B3
+So any time you hear the word set, just ask yourself two things. Which group are we talking about? And who is inside it?
+
+L1-S03-B1
+One important thing. A set must be well defined. That means for anything you pick, you can clearly say yes it is in, or no it is not.
+
+L1-S03-B2
+The students offering M T H one zero one is a set, because you can check the course list. But the tall students in the class is not a set, because tall depends on who you ask.
+
+L1-S03-B3
+So before you call something a set, ask yourself one question. Can I say clearly who is in and who is out? If yes, then it is a set.
+
+L1-S04-B1
+Now every set follows two rules. Rule number one is that repeats don't count.
+
+L1-S04-B2
+Imagine the admin adds Tobi to the group and then by mistake adds Tobi again. Does the group now have two Tobis? No! It's still just one Tobi.
+
+L1-S04-B3
+So when you see one, one, two, three, three, you clean it up, and it becomes just one, two, three.
+
+L1-S05-B1
+Rule number two is that order doesn't matter.
+
+L1-S05-B2
+Whether Tobi joined the group first or last, it's still the same group. So the set one, two, three is exactly the same as the set three, two, one.
+
+L1-S06-B1
+Quick question. Pause and think. Is the set with the letters A, B and A, equal to the set with the letters B and A?
+
+L1-S06-B2
+Yes it is! Remove the repeated A and you get A and B. And since order doesn't matter, it's the same set.
+
+L1-S07-B1
+There are three ways to write a set. The first way is to list everything, like Lagos, Osun and Oyo.
+
+L1-S07-B2
+The second way is to show a pattern, like one, two, three, and then three dots. Those dots mean the pattern continues the same way, forever.
+
+L1-S07-B3
+The third way is called set-builder form. Instead of listing, you describe the rule. When you see the colon or the straight line, you read it as such that.
+
+L1-S07-B4
+So this one reads as the set of all x such that x is odd. That gives one, three, five, seven, and so on.
+
+L1-S08-B1
+Your turn. Pause and think. How would you list the set of even numbers between one and nine?
+
+L1-S08-B2
+The answer is two, four, six and eight. We just wrote down every number that obeys the rule. So the same set can be written by listing, or by giving the rule.
+
+L1-S09-B1
+Your slide has a scary one. Let D of x and y mean that x is divisible by y. Then the slide writes this long thing.
+
+L1-S09-B2
+Let's read it slowly. It is the set of all x such that, for every y bigger than one and smaller than x, x is not divisible by y.
+
+L1-S09-B3
+So no number in between can divide x. What do we call a number like that? A prime number. So this set is simply the prime numbers. And that little hook symbol you see means not.
+
+L1-S10-B1
+Next is cardinality. It's a big word with a simple meaning. It just means how many different elements are in the set.
+
+L1-S10-B2
+Look at the set S, with the letters A, B, B and C. How many different letters do you see? Just A, B and C. So the answer is three.
+
+L1-S10-B3
+We write cardinality by putting a straight line on each side of S. And remember count the different ones only. Don't count B twice.
+
+L1-S11-B1
+Here's a tricky cardinality question. What if the elements are themselves sets? Simple. Each bag inside counts as one item.
+
+L1-S11-B2
+Here there are three items. First the empty set. Second a bag holding the empty set. Third a bigger bag. So the cardinality is three.
+
+L1-S11-B3
+And what about the natural numbers, zero, one, two, and so on forever? That set never ends, so its cardinality is infinite.
+
+L1-S12-B1
+Finally a set with nothing inside. We call it the empty set. We write it as a zero with a slanted line through it, or as curly brackets with nothing inside.
+
+L1-S12-B2
+For example, the set of months with thirty-two days. Is there any? None. So that set is empty, and its cardinality is zero.
+
+L1-S13-B1
+Sets also come in types. A finite set has an end, so you can count all its elements. Like the days of the week. Seven days and it stops.
+
+L1-S13-B2
+An infinite set never ends. Like the natural numbers. No matter how far you count, there is always a next one.
+
+L1-S13-B3
+A set with exactly one element is called a singleton. For example, the set containing only the number five.
+
+L1-S13-B4
+And the empty set has no element at all. It is still a finite set, and its cardinality is zero.
+
+L1-S14-B1
+Now two words that students always mix up. Equal sets and equivalent sets.
+
+L1-S14-B2
+Equal sets have exactly the same elements. One, two, three and three, two, one are equal sets.
+
+L1-S14-B3
+Equivalent sets only need the same number of elements. One, two, three and Lagos, Osun, Oyo are equivalent, because both have three elements. But they are not equal.
+
+L1-S14-B4
+So equal means the same elements, and equivalent means the same number of elements. Equal sets are always equivalent, but equivalent sets are not always equal.
+
+L1-S15-B1
+One last story from your slides, called Russell's paradox. A town has one barber, and he shaves everyone who does not shave themselves.
+
+L1-S15-B2
+So who shaves the barber? If he shaves himself, he breaks the rule. But if he doesn't, then the rule says he must. It goes round and round.
+
+L1-S15-B3
+The lesson is that you cannot make a set from just any rule. It's interesting, but it rarely comes out as a calculation, so don't spend your whole night on it.
+
+L1-S16-B1
+Let's recap lesson one. A set is a collection of things, written inside curly brackets. Repeats don't count, and order doesn't matter.
+
+L1-S16-B2
+You can write a set by listing, by a pattern, or with set-builder form. Cardinality means how many different elements. A set can be finite, infinite, a singleton, or empty. And remember equal sets have the same elements, but equivalent sets only have the same number of elements.
+
+==== Lesson 2: Symbols you must know ====
+
+L2-S01-B1
+Many students fear this topic because of the symbols. But a symbol is just a short way of writing words. Once you can read it out loud, the fear goes.
+
+L2-S01-B2
+So let's read them one by one, like learning a new alphabet.
+
+L2-S02-B1
+This first symbol looks like a rounded letter E. It's called the element symbol, and it tells you that something is an element of a set. In simple words, it is in the set.
+
+L2-S02-B2
+For example, two is in the set one, two, three. True? Yes. So we write two, then the element symbol, then the set. And we read it as two is an element of the set.
+
+L2-S03-B1
+Now put a slash through it. Any time you see a slash through a symbol in maths, it means not. So this one tells you that something is not an element of the set. In simple words, it is not in.
+
+L2-S03-B2
+For example, five is not in the set one, two, three. Correct.
+
+L2-S03-B3
+It's the same idea as the equal sign with a slash through it, which means not equal.
+
+L2-S04-B1
+This one looks like a letter U lying on its side with a line under it. It tells you that one set is a subset of another set.
+
+L2-S04-B2
+The set one, two is a subset of the set one, two, three, because everything on the left can be found on the right.
+
+L2-S04-B3
+Now look at the line under it. Think of the less than or equal to sign. The line means the two sets are allowed to be equal. Without the line the left side must be smaller, and we call it a proper subset.
+
+L2-S05-B1
+Pause and think. Is the set one, two, three a proper subset of the set one, two, three?
+
+L2-S05-B2
+No! It is a subset, because everything on the left is on the right. But it is not a proper subset, because the two sets are equal. A proper subset must be missing at least one element.
+
+L2-S06-B1
+Turn the subset symbol the other way round and it means superset. So the set one, two, three contains the set one, two. It's the same fact, just read from the other side.
+
+L2-S06-B2
+Now when are two sets equal? When A is a subset of B, and B is also a subset of A. Each one fits inside the other, so they must have exactly the same elements.
+
+L2-S06-B3
+That's how you prove two sets are equal in the exam. You show both directions.
+
+L2-S07-B1
+These next two are the most important. The first one looks like a cup, and it's called union. It means or. So you take everything from both sets, together.
+
+L2-S07-B2
+The second one is the cup turned upside down, like a bridge, and it's called intersection. It means and. So you take only what both sets share.
+
+L2-S07-B3
+Here's an easy way to remember. The union symbol looks like the letter U. U for union, U for unite. Everybody comes.
+
+L2-S08-B1
+This small mark at the top right of A is read as A prime. It means the complement of A, which is everything that is not in A.
+
+L2-S08-B2
+Let's say the universal set U is one, two, three, four and five. And A is just one and two. What is not in A? Three, four and five. So that's A prime.
+
+L2-S08-B3
+Some books write it as A with a small c on top, or A with a bar over it. It's the same meaning, so don't let it confuse you.
+
+L2-S09-B1
+Your lecturer's slides also use some logic symbols. You don't need to study logic for this. You just need to be able to read them.
+
+L2-S09-B2
+The upside down A means for all. And the arrow means if the first thing is true then the second thing is true.
+
+L2-S09-B3
+The symbol that looks like a pointy hat means and. See, it looks like intersection. The open V shape means or, and it looks like union.
+
+L2-S09-B4
+So when the slide says for all x, if x is in A then x is in B, it simply means everything in A is also in B. And that's just a subset. Simple.
+
+L2-S10-B1
+Let's recap the symbols. The element symbol means is in. With a slash, it means is not in. The subset symbol means everything on the left is also on the right.
+
+L2-S10-B2
+The union cup means or, so you take everything from both sets. The upside down cup is intersection. It means and, so you take only what they share. And A prime means everything not in A.
+
+==== Lesson 3: Subsets and power sets ====
+
+L3-S01-B1
+Here's the trick that will save you in the exam. Picture every set as a bag.
+
+L3-S01-B2
+This bag is holding three items. One, two and three.
+
+L3-S02-B1
+Now the element symbol asks one question. Is this one single item sitting inside the bag?
+
+L3-S02-B2
+The subset symbol asks a different question. Can I build this smaller bag, using only items from the big bag?
+
+L3-S02-B3
+Item versus bag. Hold that in your head.
+
+L3-S03-B1
+This one is an exam favourite. Pause and think. Is the empty set a subset of the set one, two, three?
+
+L3-S03-B2
+Yes! Can you build an empty bag from the big bag? Of course. Just take nothing. That's why the empty set is a subset of every set.
+
+L3-S04-B1
+Now here's a tricky one. Is the empty set an element of the set one, two, three? Think.
+
+L3-S04-B2
+No! Open the bag and look inside. The only items are one, two and three. There's no empty bag sitting in there.
+
+L3-S04-B3
+But if the set was written as the empty set, one, two, three, then the answer is yes. Because now the empty set is listed as one of the items.
+
+L3-S05-B1
+Your slides have a quiz with sets inside sets. Use bag thinking. This big bag holds two items. The first is x, and the second is a small bag holding x.
+
+L3-S05-B2
+Is the small bag an element of the big bag? Yes it's the second item. Is it also a subset? Yes again, because you can build a bag holding just x.
+
+L3-S05-B3
+But is the small bag an element of itself? No. The only item inside it is x, not the bag.
+
+L3-S06-B1
+Next is the power set. It's the set of every possible subset you can make from a set. We write it as P of S.
+
+L3-S06-B2
+Let's go to the buka. You're buying rice, and the extras on offer are chicken and plantain.
+
+L3-S07-B1
+How many ways can you order? Number one is plain rice with no extras. That's the empty set.
+
+L3-S07-B2
+Number two is rice and chicken. Number three is rice and plantain.
+
+L3-S07-B3
+Number four is rice with chicken and plantain. Big man order!
+
+L3-S07-B4
+That's four options. So this set has four subsets.
+
+L3-S08-B1
+Why four? Each extra has two choices, in or out. Chicken is in or out. Plantain is in or out. So two times two gives four.
+
+L3-S08-B2
+Add salad and it becomes two times two times two, which is eight. So the rule is that a set with n items has two to the power n subsets.
+
+L3-S08-B3
+And what about proper subsets? Just remove the full set itself. So that's two to the power n, minus one.
+
+L3-S09-B1
+Let's check the rule with salad added. Three extras, so two to the power three, which is eight. First the small ones. Nothing at all, then each extra on its own.
+
+L3-S09-B2
+Then the pairs, and finally all three together. Count them. Eight subsets, just as the rule said. If you ever doubt the rule, list them like this.
+
+L3-S10-B1
+One more trick question. What is the power set of the empty set? Think.
+
+L3-S10-B2
+The empty set has zero items, and two to the power zero is one. So there is exactly one subset, which is the empty set itself. So the answer is a set containing the empty set.
+
+L3-S10-B3
+Notice that the answer is not the empty set. It is a set holding the empty set, so it has one item. Watch out for that one.
+
+L3-S11-B1
+Pause and think. How many subsets does a set with four elements have? And how many proper subsets?
+
+L3-S11-B2
+Four elements, so two to the power four, which is sixteen subsets. Remove the full set itself and you get fifteen proper subsets.
+
+L3-S12-B1
+Let's recap. The element symbol asks if one item is in the bag. The subset symbol asks if you can build a smaller bag from the big bag. And the empty set is a subset of every set.
+
+L3-S12-B2
+A set with n items has two to the power n subsets, and two to the power n, minus one, proper subsets. Now go and try the practice questions.
+
+==== Lesson 4: Union, intersection & co. ====
+
+L4-S01-B1
+Now let's draw. There are seven students in a hostel room. This box is the whole room and we call it the universal set U.
+
+L4-S01-B2
+This blue circle A is the people who eat amala.
+
+L4-S01-B3
+And this red circle B is the people who eat jollof. Notice that the circles overlap. That middle part is very important.
+
+L4-S02-B1
+Tobi and Femi eat amala only. So they go inside A, but outside B.
+
+L4-S02-B2
+Dayo and Ada eat jollof only. So they go inside B, but outside A.
+
+L4-S02-B3
+Kemi and Musa eat both. So where do they go? In the overlap, the part both circles share.
+
+L4-S02-B4
+And Ngozi? She eats neither. She's a beans person. So she's outside both circles, but still inside the room.
+
+L4-S03-B1
+First union. We write A, then the cup symbol, then B, and we read it as A union B. Remember union means or. So it's everybody who eats amala, or jollof, or both.
+
+L4-S03-B2
+So we shade both circles completely. That's Tobi, Femi, Kemi, Musa, Dayo and Ada. And notice that Kemi and Musa are written only once. No repeats.
+
+L4-S04-B1
+Next intersection. We write A, then the upside down cup, then B, and we read it as A intersection B. It means and. So who eats amala and jollof?
+
+L4-S04-B2
+Only the people in the overlap. Kemi and Musa.
+
+L4-S05-B1
+Now A minus B. Start with everybody in A.
+
+L4-S05-B2
+Now remove anybody who is also in B. Kemi and Musa are in B, so we remove them.
+
+L4-S05-B3
+We're left with Tobi and Femi. The amala people who don't touch jollof.
+
+L4-S06-B1
+Now A prime is the complement of A. It's everybody in the room who is not in A. So everything outside the blue circle.
+
+L4-S06-B2
+That's Dayo, Ada, and don't forget Ngozi. She's outside both circles, but she's still in the room, so she counts.
+
+L4-S06-B3
+Many students forget the people outside the circles. Don't be that person.
+
+L4-S07-B1
+Next is symmetric difference. We write it with a small triangle symbol called delta. It means one side only with no sharing.
+
+L4-S07-B2
+Kemi and Musa eat both, so they're kicked out. The answer is Tobi, Femi, Dayo and Ada. In other words it's A minus B, joined with B minus A.
+
+L4-S08-B1
+Here's a useful fact from your slides. A minus B is the same as A intersection B prime. That means in A, and not in B. It's the same shading.
+
+L4-S09-B1
+Sometimes two circles share nobody. For example, one hundred level students and four hundred level students. Nobody is in both.
+
+L4-S09-B2
+Their intersection is the empty set. We call them disjoint sets.
+
+L4-S10-B1
+And here are two quick facts. The complement of U, which is everybody, is the empty set. Nobody is outside everybody.
+
+L4-S10-B2
+And the complement of the empty set is U. Everybody is outside nobody.
+
+L4-S11-B1
+Now exercise one from your slides. U is the numbers from one to ten. P is the prime numbers, two, three, five and seven. And E is the even numbers, two, four, six, eight and ten.
+
+L4-S11-B2
+Two is prime and even, so two goes in the overlap. Three, five and seven are prime only.
+
+L4-S11-B3
+Four, six, eight and ten are even only. And what about one and nine? They are neither prime nor even, so they go outside both circles, but still inside U.
+
+L4-S11-B4
+So P union E is two, three, four, five, six, seven, eight and ten. And P intersection E is just two.
+
+L4-S12-B1
+Pause and think. Using the same numbers, what is P minus E? That means prime, but not even.
+
+L4-S12-B2
+Start with the primes, two, three, five and seven. Then remove anything that is even. Only two is even, so we remove it. The answer is three, five and seven.
+
+L4-S13-B1
+Your turn. Pause and think. What is B minus A?
+
+L4-S13-B2
+It's the jollof people who don't eat amala. Dayo and Ada. And notice, A minus B and B minus A are not the same.
+
+L4-S14-B1
+Now a formula you will need for word problems. How many people are in A union B? Count A, count B, then subtract the overlap, because the overlap was counted twice.
+
+L4-S14-B2
+Check it with our room. A has four people, B has four people, and two people are in both. Four plus four, minus two, gives six. And the union had exactly six people. It works.
+
+L4-S15-B1
+Let's recap. Union means or, so you shade both circles. Intersection means and, so you shade only the overlap.
+
+L4-S15-B2
+A minus B means in A, but not in B. A prime means everything in the room that is not in A, so don't forget the people outside both circles. Now go and play with the Try it tab.
+
+==== Lesson 5: Cartesian product ====
+
+L5-S01-B1
+Next is the Cartesian product. We write A, then a times sign, then B, and we read it as A cross B. Don't let the name scare you. It just means make every possible pair.
+
+L5-S01-B2
+In each pair, you take one item from A first, then one item from B.
+
+L5-S02-B1
+For example, say you have two shirts, a white one and a blue one.
+
+L5-S02-B2
+And three trousers, black, brown and jeans. How many different outfits can you wear? Think.
+
+L5-S03-B1
+Let's pair them. White shirt with black trousers. White with brown. And white with jeans.
+
+L5-S03-B2
+Now the blue shirt. Blue with black. Blue with brown. And blue with jeans.
+
+L5-S04-B1
+Now count the lines. Six outfits. That's two shirts, times three trousers.
+
+L5-S04-B2
+So the number of elements in A cross B is the number in A, times the number in B. In your slides, that's option D.
+
+L5-S05-B1
+In set notation, we write each pair inside round brackets, not curly ones. Round brackets tell you that order matters. So A cross B is the set of these six pairs.
+
+L5-S06-B1
+One more thing. Order matters here. In each pair, the shirt comes first, then the trouser.
+
+L5-S06-B2
+So white and black is not the same pair as black and white. And that's why A cross B is usually not equal to B cross A.
+
+L5-S07-B1
+Let's see it with our clothes. If we flip it and write B cross A, the trouser now comes first in every pair.
+
+L5-S07-B2
+It still has six pairs, because three times two is six. But the pairs themselves are different. So the two sets have the same size, but they are not equal.
+
+L5-S08-B1
+You can also cross three sets or more. A cross B cross C gives you groups of three, like shirt, trouser and shoe.
+
+L5-S08-B2
+Two shirts, three trousers and two pairs of shoes. Two times three times two is twelve. So that's twelve outfits.
+
+L5-S09-B1
+Pause and think. If A has three elements and B has four elements, how many pairs are in A cross B?
+
+L5-S09-B2
+Three times four gives twelve pairs. You don't need to list them. Just multiply.
+
+L5-S10-B1
+Let's recap. A cross B is every possible pair, with one item from A first and one item from B second. Each pair goes in round brackets, because order matters.
+
+L5-S10-B2
+To count the pairs, just multiply. The number in A, times the number in B. Now go and try the practice questions.
+
+==== Lesson 6: Laws & De Morgan ====
+
+L6-S01-B1
+Now the laws. They look like plenty, but each one says something obvious. Let's go.
+
+L6-S01-B2
+First the identity law. A union the empty set is A, because adding nobody to a group changes nothing. And A intersection U is A.
+
+L6-S01-B3
+Next the domination law. A union U is U. Join everybody, and you get everybody. A intersection the empty set is the empty set. Share with nobody, and you get nobody.
+
+L6-S01-B4
+Then the idempotent law. A union A is A, and A intersection A is A. A group combined with itself is still itself.
+
+L6-S02-B1
+Now the complement laws. A union A prime is U, because everyone is either in A, or not in A. Your slides call this excluded middle.
+
+L6-S02-B2
+A intersection A prime is the empty set. Nobody can be in A and not in A at the same time. Your slides call this uniqueness.
+
+L6-S02-B3
+Then double complement. A prime prime means the opposite of the opposite of A, which is just A. Two nots cancel out.
+
+L6-S03-B1
+The commutative law. A union B equals B union A. Order doesn't matter.
+
+L6-S03-B2
+The associative law. When the symbol is the same all through, it doesn't matter where you put the brackets.
+
+L6-S03-B3
+The distributive law. A intersection, bracket B union C, equals A intersection B, union, A intersection C. It's just like opening brackets in algebra.
+
+L6-S03-B4
+And it works with the symbols swapped too. A union, bracket B intersection C, equals A union B, intersection, A union C.
+
+L6-S04-B1
+Now De Morgan's laws. They look scary, but there's only one trick to remember.
+
+L6-S04-B2
+Break the bar and flip the sign. The complement over the whole of A union B breaks into two, A prime and B prime, and the union flips to intersection.
+
+L6-S05-B1
+Let's prove it with a picture. Left side first. A union B is both circles.
+
+L6-S05-B2
+The complement of that is everything outside it. So it's only the region outside both circles.
+
+L6-S06-B1
+Now the right side. A prime is everything outside circle A. Let's colour it blue.
+
+L6-S06-B2
+B prime is everything outside circle B. Let's colour it red.
+
+L6-S06-B3
+A prime intersection B prime means where both colours meet. Look. It's the same region outside both circles. So the two sides are equal.
+
+L6-S07-B1
+The second law works the same way. The complement of A intersection B, equals A prime union B prime.
+
+L6-S07-B2
+Break the bar and flip the sign. Write that line in your jotter.
+
+L6-S08-B1
+Let's also check it with numbers, the way the exam likes it. Let U be one to five. Let A be one and two. And let B be two and three.
+
+L6-S08-B2
+Left side first. A union B is one, two and three. Its complement is everything else in U, which is four and five.
+
+L6-S08-B3
+Now the right side. A prime is three, four and five. B prime is one, four and five. What do they share? Four and five. Both sides give four and five, so the law holds.
+
+L6-S09-B1
+Here's how the laws show up in the exam. Simplify A prime prime, intersection A. Pause and think.
+
+L6-S09-B2
+First double complement. A prime prime is just A. So now we have A intersection A. And by the idempotent law, that is just A. So the answer is A.
+
+L6-S10-B1
+Let's recap the laws. A union the empty set is A, and A intersection U is A. A union A prime is everything, and A intersection A prime is empty.
+
+L6-S10-B2
+And for De Morgan, break the bar, and flip the sign. Union becomes intersection, and intersection becomes union. Now go and test yourself in the practice tab.
+
+==== Lesson 7: 3-circle word problems ====
+
+L7-S01-B1
+This is the question that scatters people in the exam. Let's read it slowly.
+
+L7-S01-B2
+Sixty-four students took maths. Ninety-four took chemistry. And fifty-eight took physics.
+
+L7-S01-B3
+Twenty-eight took maths and physics. Twenty-six took maths and chemistry. And twenty-two took chemistry and physics.
+
+L7-S01-B4
+And fourteen took all three. The question is how many took only one course.
+
+L7-S02-B1
+First the trap most students fall into. They put twenty-eight straight into the diagram.
+
+L7-S02-B2
+But those twenty-eight include the fourteen who took all three. If you don't remove them, you count them twice, and your answer will be wrong.
+
+L7-S02-B3
+So here's the golden rule. Start from the middle, then subtract your way out.
+
+L7-S03-B1
+Draw three circles, for maths, chemistry and physics. Every part of this diagram is a different group of students.
+
+L7-S04-B1
+Step one is the middle. Fourteen took all three, so write fourteen in the centre where all three circles meet.
+
+L7-S05-B1
+Step two. Maths and chemistry is twenty-six. But fourteen of them are already in the middle.
+
+L7-S05-B2
+So twenty-six minus fourteen gives twelve. Twelve students took maths and chemistry only.
+
+L7-S06-B1
+Do the same for maths and physics. Twenty-eight minus fourteen gives fourteen.
+
+L7-S06-B2
+And for chemistry and physics. Twenty-two minus fourteen gives eight.
+
+L7-S07-B1
+Step three is maths only. Look at the maths circle. It already has twelve, fourteen and fourteen inside. Add them up and you get forty.
+
+L7-S07-B2
+The maths total is sixty-four. Sixty-four minus forty gives twenty-four. So twenty-four students took maths only.
+
+L7-S08-B1
+Now chemistry only. Inside the chemistry circle, we have twelve, eight and fourteen. That's thirty-four. Ninety-four minus thirty-four gives sixty.
+
+L7-S08-B2
+And physics only. Inside, we have fourteen, eight and fourteen. That's thirty-six. Fifty-eight minus thirty-six gives twenty-two.
+
+L7-S09-B1
+Now the answer. One course only means the three outer parts. Twenty-four, sixty and twenty-two.
+
+L7-S09-B2
+Add them up and you get one hundred and six students. That's your answer.
+
+L7-S09-B3
+Bonus. If they ask how many took at least one course, add every number in the diagram. That gives one hundred and fifty-four.
+
+L7-S10-B1
+Pause and think. Using the same diagram, how many students took exactly two courses?
+
+L7-S10-B2
+Exactly two means the double overlaps only, not the middle. That's twelve, fourteen and eight. Add them up and you get thirty-four students.
+
+L7-S11-B1
+Let's recap the method. Number one is to start with the middle.
+
+L7-S11-B2
+Number two is each double overlap minus the middle.
+
+L7-S11-B3
+Number three is each circle's total minus everything already inside it.
+
+L7-S11-B4
+Practise this three times and this question will never scatter you again. Now go to the practice tab and try one yourself.
+

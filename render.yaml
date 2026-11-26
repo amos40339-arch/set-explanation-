@@ -1,0 +1,17 @@
+# Render Blueprint: static site published straight from the repo root.
+# Spec: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    runtime: static
+    name: mth101-simplified
+    # No build step: the site is plain index.html + audio/. Render requires a
+    # buildCommand, so this one just prints a message.
+    buildCommand: echo "No build step"
+    staticPublishPath: .
+    headers:
+      # Narration clips rarely change, so let phones keep them for 30 days
+      # (saves students' data). Clip file names stay the same when a clip is
+      # regenerated, so a longer cache would keep serving old audio.
+      - path: /audio/*
+        name: Cache-Control
+        value: public, max-age=2592000
