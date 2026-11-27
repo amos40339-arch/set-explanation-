@@ -707,7 +707,8 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:.88rem;text
       ],
       [
         {say:"Now a formula you will need for word problems. How many people are in A union B? Count A, count B, then subtract the overlap, because the overlap was counted twice.", draw:function(){ B.title('Counting a union'); B.text(320, 150, 'n(A ∪ B) = n(A) + n(B) − n(A ∩ B)', {size:32, anchor:'middle', color:'blue', weight:700, speed:40}); }},
-        {say:"Check it with our room. A has four people, B has four people, and two people are in both. Four plus four, minus two, gives six. And the union had exactly six people. It works.", draw:function(){ B.text(320, 235, '4 + 4 − 2 = 6  ✓', {size:44, anchor:'middle', speed:60}); B.text(320, 300, 'Kemi and Musa were counted twice,', {size:28, anchor:'middle', color:'red'}); B.text(320, 345, 'so we subtract them once', {size:28, anchor:'middle', color:'green'}); }}
+        {say:"Let's check it with our room. A has four people. Tobi, Femi, Kemi and Musa. B also has four people. Dayo, Ada, Kemi and Musa. Four plus four is eight.", draw:function(){ B.text(320, 220, 'n(A) + n(B) = 4 + 4 = 8', {size:36, anchor:'middle', speed:60}); }},
+        {say:"But wait. Kemi and Musa are in both lists, so we counted them twice. Take them away once. Eight take away two is six. And the union had exactly six people. It works.", draw:function(){ B.text(320, 285, 'Kemi and Musa counted twice → − 2', {size:28, anchor:'middle', color:'red'}); B.text(320, 350, '8 − 2 = 6  ✓', {size:44, anchor:'middle', color:'green', weight:700}); }}
       ],
       [
         {say:"Let's recap. Union means or, so you shade both circles. Intersection means and, so you shade only the overlap.", draw:function(){ B.title('Recap: lesson 4'); B.text(50, 140, 'A ∪ B  = in A or B (or both)', {size:30}); B.text(50, 190, 'A ∩ B  = in both', {size:30}); }},
@@ -816,44 +817,64 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:.88rem;text
         {say:"And fourteen took all three. The question is how many took only one course.", draw:function(){ B.text(60, 255, 'All three 14', {size:30}); B.text(60, 335, 'One course only = ?', {size:40, color:'red', weight:700}); }}
       ],
       [
-        {say:"First the trap most students fall into. They put twenty-eight straight into the diagram.", draw:function(){ B.title('The trap'); B.text(60, 140, '"28 took Maths and Physics"', {size:34}); }},
-        {say:"But those twenty-eight include the fourteen who took all three. If you don't remove them, you count them twice, and your answer will be wrong.", draw:function(){ B.text(60, 205, '→ this 28 INCLUDES the 14 in the middle', {size:30, color:'red'}); }},
-        {say:"So here's the golden rule. Start from the middle, then subtract your way out.", draw:function(){ B.text(320, 320, 'start from the MIDDLE,', {size:38, anchor:'middle', color:'green', weight:700}); B.text(320, 365, 'then subtract your way out', {size:34, anchor:'middle', color:'green'}); }}
+        {say:"First the trap most students fall into. They see that twenty-eight took maths and physics, and they write twenty-eight straight into the diagram.", draw:function(){ B.title('The trap'); B.text(60, 140, '"28 took Maths and Physics"', {size:34}); }},
+        {say:"But think about it. The fourteen students who took all three courses also took maths and physics. So those fourteen are already inside that twenty-eight.", draw:function(){ B.text(60, 205, '→ this 28 already INCLUDES the 14', {size:30, color:'red'}); }},
+        {say:"If you write twenty-eight and also write fourteen, those fourteen students are counted twice. It's like counting your friend once in the class group and again in the hostel group, and then saying you have two friends.", draw:function(){ B.text(60, 260, 'count them twice = wrong answer', {size:30, color:'red'}); }},
+        {say:"So here's the golden rule. Start from the middle, then subtract your way out.", draw:function(){ B.text(320, 330, 'start from the MIDDLE,', {size:38, anchor:'middle', color:'green', weight:700}); B.text(320, 372, 'then subtract your way out', {size:34, anchor:'middle', color:'green'}); }}
       ],
       [
-        {say:"Draw three circles, for maths, chemistry and physics. Every part of this diagram is a different group of students.", draw:function(){ three(0, true); }}
+        {say:"Draw three circles, for maths, chemistry and physics. Every space in this diagram is a different group of students.", draw:function(){ three(0, true); }},
+        {say:"Look at the spaces. The very middle is for students who took all three. The three spaces where only two circles meet are for students who took exactly two courses. And the three outer spaces are for students who took one course only.", draw:function(){ B.text(478, 140, 'middle:', {size:22, color:'muted'}); B.text(478, 168, 'all 3', {size:26, weight:700}); B.text(478, 215, 'two meet:', {size:22, color:'muted'}); B.text(478, 243, 'exactly 2', {size:26, weight:700}); B.text(478, 290, 'outer:', {size:22, color:'muted'}); B.text(478, 318, 'only 1', {size:26, weight:700}); }}
       ],
       [
         {say:"Step one is the middle. Fourteen took all three, so write fourteen in the centre where all three circles meet.", draw:function(){ three(0); writeNum(1); calc(0, 'all three = 14'); }}
       ],
       [
-        {say:"Step two. Maths and chemistry is twenty-six. But fourteen of them are already in the middle.", draw:function(){ three(1); calc(0, 'M & C:  26 − 14'); }},
-        {say:"So twenty-six minus fourteen gives twelve. Twelve students took maths and chemistry only.", draw:function(){ writeNum(2); calc(1, '= 12', 'red'); }}
+        {say:"Step two. Twenty-six students took maths and chemistry. But wait. Fourteen of those twenty-six also took physics, and we have already written them in the middle.", draw:function(){ three(1); B.text(478, 140, 'M & C', {size:28, color:'blue', weight:700}); B.text(478, 178, '26 in total', {size:24}); }},
+        {say:"So to find maths and chemistry only, we take away the fourteen. Twenty-six take away fourteen.", draw:function(){ B.text(478, 225, '26 − 14', {size:30, color:'red'}); }},
+        {say:"Let's do it slowly. Twenty-six take away ten is sixteen. Then sixteen take away four is twelve.", draw:function(){ B.text(478, 265, '26 − 10 = 16', {size:22, color:'muted'}); B.text(478, 295, '16 − 4 = 12', {size:22, color:'muted'}); }},
+        {say:"So twelve students took maths and chemistry only. We write twelve in the space where only those two circles meet.", draw:function(){ writeNum(2); B.text(478, 345, '= 12', {size:32, color:'green', weight:700}); }}
       ],
       [
-        {say:"Do the same for maths and physics. Twenty-eight minus fourteen gives fourteen.", draw:function(){ three(2); writeNum(3); calc(0, 'M & P:  28 − 14 = 14'); }},
-        {say:"And for chemistry and physics. Twenty-two minus fourteen gives eight.", draw:function(){ writeNum(4); calc(1, 'C & P:  22 − 14 = 8'); }}
+        {say:"Now maths and physics. Twenty-eight took both. Again, fourteen of them are already in the middle, so we take them away. Twenty-eight take away fourteen.", draw:function(){ three(2); B.text(478, 140, 'M & P', {size:28, color:'blue', weight:700}); B.text(478, 185, '28 − 14', {size:30, color:'red'}); }},
+        {say:"Twenty-eight take away ten is eighteen. Eighteen take away four is fourteen. So fourteen students took maths and physics only.", draw:function(){ B.text(478, 225, '28 − 10 = 18', {size:22, color:'muted'}); B.text(478, 255, '18 − 4 = 14', {size:22, color:'muted'}); writeNum(3); B.text(478, 305, '= 14', {size:32, color:'green', weight:700}); }}
       ],
       [
-        {say:"Step three is maths only. Look at the maths circle. It already has twelve, fourteen and fourteen inside. Add them up and you get forty.", draw:function(){ three(4); calc(0, 'inside: 12 + 14 + 14 = 40'); }},
-        {say:"The maths total is sixty-four. Sixty-four minus forty gives twenty-four. So twenty-four students took maths only.", draw:function(){ writeNum(5); calc(1, 'Maths only: 64 − 40 = 24', 'red'); }}
+        {say:"Same thing for chemistry and physics. Twenty-two took both. Take away the fourteen in the middle. Twenty-two take away fourteen.", draw:function(){ three(3); B.text(478, 140, 'C & P', {size:28, color:'red', weight:700}); B.text(478, 185, '22 − 14', {size:30, color:'red'}); }},
+        {say:"Twenty-two take away ten is twelve. Twelve take away four is eight. So eight students took chemistry and physics only. Notice the pattern. Every time, we just took away the middle.", draw:function(){ B.text(478, 225, '22 − 10 = 12', {size:22, color:'muted'}); B.text(478, 255, '12 − 4 = 8', {size:22, color:'muted'}); writeNum(4); B.text(478, 305, '= 8', {size:32, color:'green', weight:700}); }}
       ],
       [
-        {say:"Now chemistry only. Inside the chemistry circle, we have twelve, eight and fourteen. That's thirty-four. Ninety-four minus thirty-four gives sixty.", draw:function(){ three(5); writeNum(6); calc(0, 'Chem: 94 − 34 = 60'); }},
-        {say:"And physics only. Inside, we have fourteen, eight and fourteen. That's thirty-six. Fifty-eight minus thirty-six gives twenty-two.", draw:function(){ writeNum(7); calc(1, 'Physics: 58 − 36 = 22'); }}
+        {say:"Step three. Now we find maths only. The maths circle is the blue one. Inside it, we have already written three numbers. Twelve, fourteen and fourteen.", draw:function(){ three(4); B.text(478, 140, 'Maths', {size:28, color:'blue', weight:700}); B.text(478, 172, 'inside:', {size:22, color:'muted'}); B.text(478, 202, '12 + 14 + 14', {size:22}); }},
+        {say:"Let's add them slowly. Twelve plus fourteen is twenty-six. Then twenty-six plus fourteen is forty. So forty maths students are already written in the circle.", draw:function(){ B.text(478, 235, '12 + 14 = 26', {size:22, color:'muted'}); B.text(478, 263, '26 + 14 = 40', {size:22, color:'muted'}); }},
+        {say:"But sixty-four students took maths altogether. So the ones still missing are sixty-four take away forty, which is twenty-four. Twenty-four students took maths only.", draw:function(){ B.text(478, 305, '64 − 40', {size:28, color:'red'}); writeNum(5); B.text(478, 348, '= 24', {size:32, color:'green', weight:700}); }}
       ],
       [
-        {say:"Now the answer. One course only means the three outer parts. Twenty-four, sixty and twenty-two.", draw:function(){ three(7); B.circle(215, 147, 26, {color:'red', w:3, dur:400, gap:200}); B.circle(425, 147, 26, {color:'red', w:3, dur:400, gap:200}); B.circle(320, 309, 26, {color:'red', w:3, dur:400}); }},
-        {say:"Add them up and you get one hundred and six students. That's your answer.", draw:function(){ calc(0, '24 + 60 + 22 = 106 ✓', 'red'); }},
-        {say:"Bonus. If they ask how many took at least one course, add every number in the diagram. That gives one hundred and fifty-four.", draw:function(){ calc(1, 'at least one = 154'); }}
+        {say:"Now chemistry only. The chemistry circle is the red one. Inside it we have twelve, eight and fourteen. Twelve plus eight is twenty. Twenty plus fourteen is thirty-four.", draw:function(){ three(5); B.text(478, 140, 'Chem', {size:28, color:'red', weight:700}); B.text(478, 172, 'inside:', {size:22, color:'muted'}); B.text(478, 202, '12 + 8 + 14', {size:22}); B.text(478, 235, '= 34', {size:24}); }},
+        {say:"Chemistry had ninety-four students in total. Ninety-four take away thirty-four. Ninety-four take away thirty is sixty-four, and sixty-four take away four is sixty. So sixty students took chemistry only.", draw:function(){ B.text(478, 275, '94 − 34', {size:28, color:'red'}); B.text(478, 305, '94 − 30 = 64', {size:20, color:'muted'}); writeNum(6); B.text(478, 348, '= 60', {size:32, color:'green', weight:700}); }}
       ],
       [
-        {say:"Pause and think. Using the same diagram, how many students took exactly two courses?", draw:function(){ B.title('Quick check'); B.text(320, 170, 'exactly two courses = ?', {size:40, anchor:'middle', color:'red'}); B.text(320, 230, 'hint: the double overlaps only', {size:26, anchor:'middle', color:'muted'}); }, hold:4000},
-        {say:"Exactly two means the double overlaps only, not the middle. That's twelve, fourteen and eight. Add them up and you get thirty-four students.", draw:function(){ B.text(320, 320, '12 + 14 + 8 = 34', {size:46, anchor:'middle', color:'green', weight:700}); }}
+        {say:"Finally physics only. The physics circle is the green one at the bottom. Inside it we have fourteen, eight and fourteen. Fourteen plus eight is twenty-two. Twenty-two plus fourteen is thirty-six.", draw:function(){ three(6); B.text(478, 140, 'Physics', {size:28, color:'green', weight:700}); B.text(478, 172, 'inside:', {size:22, color:'muted'}); B.text(478, 202, '14 + 8 + 14', {size:22}); B.text(478, 235, '= 36', {size:24}); }},
+        {say:"Physics had fifty-eight students. Fifty-eight take away thirty-six. Fifty-eight take away thirty is twenty-eight, and twenty-eight take away six is twenty-two. So twenty-two students took physics only.", draw:function(){ B.text(478, 275, '58 − 36', {size:28, color:'red'}); B.text(478, 305, '58 − 30 = 28', {size:20, color:'muted'}); writeNum(7); B.text(478, 348, '= 22', {size:32, color:'green', weight:700}); }}
+      ],
+      [
+        {say:"Now the answer. One course only means the three outer spaces. Twenty-four, sixty and twenty-two.", draw:function(){ three(7); B.circle(215, 147, 26, {color:'red', w:3, dur:400, gap:200}); B.circle(425, 147, 26, {color:'red', w:3, dur:400, gap:200}); B.circle(320, 309, 26, {color:'red', w:3, dur:400}); }},
+        {say:"Let's add them slowly. Twenty-four plus sixty is eighty-four. Then eighty-four plus twenty-two is one hundred and six. So one hundred and six students took only one course. That's your answer.", draw:function(){ calc(0, '24 + 60 = 84', 'blue'); calc(1, '84 + 22 = 106 ✓', 'red'); }}
+      ],
+      [
+        {say:"Bonus. What if they ask how many took at least one course? That means everybody inside the circles. So we add all seven numbers.", draw:function(){ three(7); B.text(478, 140, 'add all 7', {size:26, color:'blue', weight:700}); }},
+        {say:"Start with the four inside numbers. Fourteen plus twelve plus fourteen plus eight is forty-eight. Then add the one course total, one hundred and six. Forty-eight plus one hundred and six is one hundred and fifty-four.", draw:function(){ B.text(478, 180, '14+12+14+8', {size:22}); B.text(478, 210, '= 48', {size:24}); B.text(478, 255, '48 + 106', {size:26, color:'red'}); B.text(478, 300, '= 154', {size:32, color:'green', weight:700}); }}
+      ],
+      [
+        {say:"Here's a trick to check your work. Pick any circle and add everything inside it. You must get the total from the question.", draw:function(){ B.title('Check your work'); B.text(60, 150, 'Maths circle:', {size:32, color:'blue', weight:700}); }},
+        {say:"Maths circle. Twenty-four, twelve, fourteen and fourteen. Twenty-four plus twelve is thirty-six. Plus fourteen is fifty. Plus fourteen again is sixty-four. And sixty-four is the maths total. Correct!", draw:function(){ B.text(60, 210, '24 + 12 + 14 + 14', {size:34}); B.text(60, 265, '= 36 → 50 → 64', {size:30, color:'muted'}); B.text(60, 330, '64 = Maths total  ✓', {size:36, color:'green', weight:700}); }}
+      ],
+      [
+        {say:"Pause and think. Using the same diagram, how many students took exactly two courses?", draw:function(){ B.title('Quick check'); B.text(320, 170, 'exactly two courses = ?', {size:40, anchor:'middle', color:'red'}); B.text(320, 230, 'hint: where only two circles meet', {size:26, anchor:'middle', color:'muted'}); }, hold:4000},
+        {say:"Exactly two means the three spaces where only two circles meet, not the middle. That's twelve, fourteen and eight. Twelve plus fourteen is twenty-six, and twenty-six plus eight is thirty-four students.", draw:function(){ B.text(320, 300, '12 + 14 = 26', {size:32, anchor:'middle', color:'muted'}); B.text(320, 360, '26 + 8 = 34', {size:44, anchor:'middle', color:'green', weight:700}); }}
       ],
       [
         {say:"Let's recap the method. Number one is to start with the middle.", draw:function(){ B.title('The method'); B.text(60, 140, '1.  middle first', {size:34}); }},
-        {say:"Number two is each double overlap minus the middle.", draw:function(){ B.text(60, 200, '2.  each overlap − middle', {size:34}); }},
+        {say:"Number two is each two-course number minus the middle.", draw:function(){ B.text(60, 200, '2.  each overlap − middle', {size:34}); }},
         {say:"Number three is each circle's total minus everything already inside it.", draw:function(){ B.text(60, 260, '3.  circle total − what\'s inside', {size:34}); }},
         {say:"Practise this three times and this question will never scatter you again. Now go to the practice tab and try one yourself.", draw:function(){ B.text(320, 350, 'start from the middle!', {size:36, anchor:'middle', color:'green', weight:700}); }}
       ]

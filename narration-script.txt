@@ -424,7 +424,10 @@ L4-S14-B1
 Now a formula you will need for word problems. How many people are in A union B? Count A, count B, then subtract the overlap, because the overlap was counted twice.
 
 L4-S14-B2
-Check it with our room. A has four people, B has four people, and two people are in both. Four plus four, minus two, gives six. And the union had exactly six people. It works.
+Let's check it with our room. A has four people. Tobi, Femi, Kemi and Musa. B also has four people. Dayo, Ada, Kemi and Musa. Four plus four is eight.
+
+L4-S14-B3
+But wait. Kemi and Musa are in both lists, so we counted them twice. Take them away once. Eight take away two is six. And the union had exactly six people. It works.
 
 L4-S15-B1
 Let's recap. Union means or, so you shade both circles. Intersection means and, so you shade only the overlap.
@@ -589,68 +592,104 @@ L7-S01-B4
 And fourteen took all three. The question is how many took only one course.
 
 L7-S02-B1
-First the trap most students fall into. They put twenty-eight straight into the diagram.
+First the trap most students fall into. They see that twenty-eight took maths and physics, and they write twenty-eight straight into the diagram.
 
 L7-S02-B2
-But those twenty-eight include the fourteen who took all three. If you don't remove them, you count them twice, and your answer will be wrong.
+But think about it. The fourteen students who took all three courses also took maths and physics. So those fourteen are already inside that twenty-eight.
 
 L7-S02-B3
+If you write twenty-eight and also write fourteen, those fourteen students are counted twice. It's like counting your friend once in the class group and again in the hostel group, and then saying you have two friends.
+
+L7-S02-B4
 So here's the golden rule. Start from the middle, then subtract your way out.
 
 L7-S03-B1
-Draw three circles, for maths, chemistry and physics. Every part of this diagram is a different group of students.
+Draw three circles, for maths, chemistry and physics. Every space in this diagram is a different group of students.
+
+L7-S03-B2
+Look at the spaces. The very middle is for students who took all three. The three spaces where only two circles meet are for students who took exactly two courses. And the three outer spaces are for students who took one course only.
 
 L7-S04-B1
 Step one is the middle. Fourteen took all three, so write fourteen in the centre where all three circles meet.
 
 L7-S05-B1
-Step two. Maths and chemistry is twenty-six. But fourteen of them are already in the middle.
+Step two. Twenty-six students took maths and chemistry. But wait. Fourteen of those twenty-six also took physics, and we have already written them in the middle.
 
 L7-S05-B2
-So twenty-six minus fourteen gives twelve. Twelve students took maths and chemistry only.
+So to find maths and chemistry only, we take away the fourteen. Twenty-six take away fourteen.
+
+L7-S05-B3
+Let's do it slowly. Twenty-six take away ten is sixteen. Then sixteen take away four is twelve.
+
+L7-S05-B4
+So twelve students took maths and chemistry only. We write twelve in the space where only those two circles meet.
 
 L7-S06-B1
-Do the same for maths and physics. Twenty-eight minus fourteen gives fourteen.
+Now maths and physics. Twenty-eight took both. Again, fourteen of them are already in the middle, so we take them away. Twenty-eight take away fourteen.
 
 L7-S06-B2
-And for chemistry and physics. Twenty-two minus fourteen gives eight.
+Twenty-eight take away ten is eighteen. Eighteen take away four is fourteen. So fourteen students took maths and physics only.
 
 L7-S07-B1
-Step three is maths only. Look at the maths circle. It already has twelve, fourteen and fourteen inside. Add them up and you get forty.
+Same thing for chemistry and physics. Twenty-two took both. Take away the fourteen in the middle. Twenty-two take away fourteen.
 
 L7-S07-B2
-The maths total is sixty-four. Sixty-four minus forty gives twenty-four. So twenty-four students took maths only.
+Twenty-two take away ten is twelve. Twelve take away four is eight. So eight students took chemistry and physics only. Notice the pattern. Every time, we just took away the middle.
 
 L7-S08-B1
-Now chemistry only. Inside the chemistry circle, we have twelve, eight and fourteen. That's thirty-four. Ninety-four minus thirty-four gives sixty.
+Step three. Now we find maths only. The maths circle is the blue one. Inside it, we have already written three numbers. Twelve, fourteen and fourteen.
 
 L7-S08-B2
-And physics only. Inside, we have fourteen, eight and fourteen. That's thirty-six. Fifty-eight minus thirty-six gives twenty-two.
+Let's add them slowly. Twelve plus fourteen is twenty-six. Then twenty-six plus fourteen is forty. So forty maths students are already written in the circle.
+
+L7-S08-B3
+But sixty-four students took maths altogether. So the ones still missing are sixty-four take away forty, which is twenty-four. Twenty-four students took maths only.
 
 L7-S09-B1
-Now the answer. One course only means the three outer parts. Twenty-four, sixty and twenty-two.
+Now chemistry only. The chemistry circle is the red one. Inside it we have twelve, eight and fourteen. Twelve plus eight is twenty. Twenty plus fourteen is thirty-four.
 
 L7-S09-B2
-Add them up and you get one hundred and six students. That's your answer.
-
-L7-S09-B3
-Bonus. If they ask how many took at least one course, add every number in the diagram. That gives one hundred and fifty-four.
+Chemistry had ninety-four students in total. Ninety-four take away thirty-four. Ninety-four take away thirty is sixty-four, and sixty-four take away four is sixty. So sixty students took chemistry only.
 
 L7-S10-B1
-Pause and think. Using the same diagram, how many students took exactly two courses?
+Finally physics only. The physics circle is the green one at the bottom. Inside it we have fourteen, eight and fourteen. Fourteen plus eight is twenty-two. Twenty-two plus fourteen is thirty-six.
 
 L7-S10-B2
-Exactly two means the double overlaps only, not the middle. That's twelve, fourteen and eight. Add them up and you get thirty-four students.
+Physics had fifty-eight students. Fifty-eight take away thirty-six. Fifty-eight take away thirty is twenty-eight, and twenty-eight take away six is twenty-two. So twenty-two students took physics only.
 
 L7-S11-B1
-Let's recap the method. Number one is to start with the middle.
+Now the answer. One course only means the three outer spaces. Twenty-four, sixty and twenty-two.
 
 L7-S11-B2
-Number two is each double overlap minus the middle.
+Let's add them slowly. Twenty-four plus sixty is eighty-four. Then eighty-four plus twenty-two is one hundred and six. So one hundred and six students took only one course. That's your answer.
 
-L7-S11-B3
+L7-S12-B1
+Bonus. What if they ask how many took at least one course? That means everybody inside the circles. So we add all seven numbers.
+
+L7-S12-B2
+Start with the four inside numbers. Fourteen plus twelve plus fourteen plus eight is forty-eight. Then add the one course total, one hundred and six. Forty-eight plus one hundred and six is one hundred and fifty-four.
+
+L7-S13-B1
+Here's a trick to check your work. Pick any circle and add everything inside it. You must get the total from the question.
+
+L7-S13-B2
+Maths circle. Twenty-four, twelve, fourteen and fourteen. Twenty-four plus twelve is thirty-six. Plus fourteen is fifty. Plus fourteen again is sixty-four. And sixty-four is the maths total. Correct!
+
+L7-S14-B1
+Pause and think. Using the same diagram, how many students took exactly two courses?
+
+L7-S14-B2
+Exactly two means the three spaces where only two circles meet, not the middle. That's twelve, fourteen and eight. Twelve plus fourteen is twenty-six, and twenty-six plus eight is thirty-four students.
+
+L7-S15-B1
+Let's recap the method. Number one is to start with the middle.
+
+L7-S15-B2
+Number two is each two-course number minus the middle.
+
+L7-S15-B3
 Number three is each circle's total minus everything already inside it.
 
-L7-S11-B4
+L7-S15-B4
 Practise this three times and this question will never scatter you again. Now go to the practice tab and try one yourself.
 
