@@ -27,7 +27,7 @@ The first module is **MTH 101, Module 1: Set Theory**. Chemistry and physics mod
 3. **Cover everything in the source material.** When building a module, list every topic from every slide or page first, then check every item is taught in a lesson. Note anything left out on purpose, and why.
 4. **Mobile-first.** It must work at 360px wide on Android Chrome, iPhone Safari and WhatsApp's in-app browser. No sideways scrolling.
 5. **One self-contained page per module.** HTML, CSS and JS live in `index.html`. The only external files are Google Fonts and the `audio/` folder. No frameworks, no build step.
-6. **Keep it light.** Students have limited data. No images or video files; the board is drawn with SVG. Audio clips are small MP3s.
+6. **Keep it light.** Students have limited data. No images or video files; the board is drawn with SVG. Audio clips are 24 kbps mono MP3s (about 1.1 KB per spoken word, so a lesson is 0.4 to 1.2 MB). Only two Google Font families (Plus Jakarta Sans 700/800, Kalam 400/700); body text uses the phone's own font. Phone voices in the voice picker use no data, and the lesson cards show each lesson's size.
 7. **Don't build general chat.** Every department already has a WhatsApp group.
 
 ## Files
@@ -90,7 +90,7 @@ Helpers: `venn(o)` draws U and circles A and B (`o.la`/`o.lb` for labels, `o.par
 - After ANY narration change or reordering:
   1. `node tools/export_script.js`
   2. Delete the affected mp3s. After a reorder, delete everything from the changed point onward, or the whole audio folder.
-  3. `python gen_voice.py` (only missing clips are regenerated)
+  3. `python gen_voice.py` (only missing clips are regenerated). With ffmpeg installed it shrinks each new clip to 24 kbps mono and trims the silence at both ends. Without ffmpeg, clips stay at 48 kbps (twice the data), so install ffmpeg first.
 - Voices: `en-NG-AbeoNeural` (male, default) or `en-NG-EzinneNeural` (female). `edge-tts` is unofficial. Before charging money, move generation to Microsoft's official Azure Speech service, which has the same voices.
 
 ## How to write lessons (the most important section)
@@ -114,7 +114,7 @@ The voice must **teach like a good Nigerian lecturer**, not read text aloud.
 - Deep-blue header with a graph-paper grid, then the whiteboard player as the centrepiece. The player has lesson chips, captions, controls, a voice picker and a step progress bar.
 - Tabs underneath: **Try it** (interactive tool), **Practice** (10 multiple-choice questions, explanation shown after answering, score bar), **Quick notes** (tables of symbols, rules, laws, formulas and exercise answers).
 - White background and blue design, single light theme. Tokens are in `:root`: `--blue #1d4ed8`, `--blue-deep #0a2a8a`, `--red #e0453a`, `--green #0f9d6b`, `--yellow #ffd84d`, `--ink #0b1b3a`.
-- Fonts: Plus Jakarta Sans (headings), Inter (body), Kalam (whiteboard handwriting).
+- Fonts: Plus Jakarta Sans 700/800 (headings), the phone's system font (body, no download), Kalam 400/700 (whiteboard handwriting). Don't add font families or weights: each one is extra data.
 - Buttons at least 44px tall. Visible focus states. Respect `prefers-reduced-motion`.
 
 ## Building a new module (for example CHM 101)

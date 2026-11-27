@@ -14,7 +14,9 @@ After changing any lesson narration in index.html
      delete the whole audio folder, because clip IDs renumber.
   3. py gen_voice.py
      (default voice: en-NG-AbeoNeural, normal speed, pitch -3Hz.
-      Only missing clips are made. If some fail, run it again.)
+      Only missing clips are made. If some fail, run it again.
+      Needs ffmpeg to shrink clips to 24 kbps mono for students' data;
+      without ffmpeg the clips are twice as big.)
 
 Test locally
   py -m http.server 8000   then open http://localhost:8000

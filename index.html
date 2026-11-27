@@ -5,14 +5,14 @@
 <title>Sets Made Simple</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600&family=Kalam:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Kalam:wght@400;700&display=swap">
 <style>
 /* Layout: deep-blue graph-paper header, then a whiteboard lesson player as the centrepiece; Try it / Practice / Notes sit in tabs under it. Single light theme on purpose: white and blue. */
 :root{
   --bg:#ffffff; --soft:#f3f6fd; --line:#dfe6f3; --ink:#0b1b3a; --muted:#55627a;
   --blue:#1d4ed8; --blue-deep:#0a2a8a; --blue-soft:#e8efff; --red:#e0453a; --green:#0f9d6b; --yellow:#ffd84d;
   --f-display:"Plus Jakarta Sans",ui-sans-serif,system-ui,sans-serif;
-  --f-body:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-body:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; /* phone's own font: no download */
   --f-board:"Kalam","Segoe Print","Comic Sans MS",cursive;
   color-scheme:light;
 }
@@ -177,7 +177,7 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:.88rem;text
         <button class="cbtn" id="btnVoice" type="button" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4z"/><path id="wave" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg><span id="voiceTx">Voice on</span></button>
       </div>
       <div class="vrow"><label for="voiceSel">Voice</label><select id="voiceSel" aria-label="Choose a voice"></select></div>
-      <p class="vnote">No sound? Turn off silent mode, or open the link in Chrome or Safari. Captions always show.</p>
+      <p class="vnote">Low on data? Pick a <b>phone voice</b> above: it uses no data, and your choice is remembered. Lessons you have played load from your phone next time. No sound? Turn off silent mode, or open the link in Chrome or Safari. Captions always show.</p>
     </div>
     <div class="chapters" id="chapters"></div>
   </section>
@@ -903,9 +903,9 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:.88rem;text
   }
   function refreshVoiceList(){
     var sel = $('voiceSel'); sel.innerHTML = ''; sel.disabled = false;
-    if (audioOk !== false) { var r = document.createElement('option'); r.value = '__rec'; r.textContent = 'Nigerian teacher voice (recommended)'; if (useRecorded) r.selected = true; sel.appendChild(r); }
+    if (audioOk !== false) { var r = document.createElement('option'); r.value = '__rec'; r.textContent = 'Nigerian teacher voice (recommended, uses data)'; if (useRecorded) r.selected = true; sel.appendChild(r); }
     else useRecorded = false;
-    voices.forEach(function(v){ var o = document.createElement('option'); o.value = v.voiceURI; o.textContent = 'Phone voice: ' + v.name + ' (' + v.lang + ')'; if (!useRecorded && voice && v.voiceURI === voice.voiceURI) o.selected = true; sel.appendChild(o); });
+    voices.forEach(function(v){ var o = document.createElement('option'); o.value = v.voiceURI; o.textContent = 'Phone voice, no data: ' + v.name + ' (' + v.lang + ')'; if (!useRecorded && voice && v.voiceURI === voice.voiceURI) o.selected = true; sel.appendChild(o); });
     if (!sel.options.length) { var n = document.createElement('option'); n.textContent = 'No voice on this browser'; sel.appendChild(n); sel.disabled = true; }
   }
   if (synth) { loadVoices(); try { synth.addEventListener('voiceschanged', loadVoices); } catch(e){ synth.onvoiceschanged = loadVoices; } }
@@ -1039,8 +1039,9 @@ footer{border-top:1px solid var(--line);color:var(--muted);font-size:.88rem;text
     CH.forEach(function(c, i){
       var b = document.createElement('button'); b.type = 'button'; b.id = 'chap-' + i;
       b.className = 'chap' + (i === ch ? ' cur' : '') + (done[i] ? ' done' : '');
-      var mins = Math.max(1, Math.round(c.steps.reduce(function(a, s){ return a + s.reduce(function(x, bt){ return x + bt.say.split(/\s+/).length; }, 0); }, 0) / 140));
-      b.innerHTML = '<span class="n">' + (done[i] ? '✓' : (i + 1)) + '</span><span class="tx"><b></b><small>about ' + mins + ' min</small></span>';
+      var words = c.steps.reduce(function(a, s){ return a + s.reduce(function(x, bt){ return x + bt.say.split(/\s+/).length; }, 0); }, 0);
+      var mins = Math.max(1, Math.round(words / 140)), mb = Math.max(0.1, Math.round(words * 1120 / 1048576 * 10) / 10); // about 1.1 KB of audio per spoken word
+      b.innerHTML = '<span class="n">' + (done[i] ? '✓' : (i + 1)) + '</span><span class="tx"><b></b><small>about ' + mins + ' min · ' + mb + ' MB</small></span>';
       b.querySelector('b').textContent = c.title;
       b.addEventListener('click', function(){ ch = i; st = 0; play(); renderChapters(); document.querySelector('.player').scrollIntoView({behavior:'smooth', block:'start'}); });
       box.appendChild(b);
